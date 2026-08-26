@@ -1,0 +1,5 @@
+code,name,city,gateOpenTime,gateCloseTime,isActive
+1000,NubTech Chennai Works,Chennai,07:00:00,20:00:00,true
+2000,NubTech Hosur Plant,Hosur,06:30:00,21:00:00,true
+3000,NubTech Pune Plant,Pune,07:00:00,19:30:00,true
+4000,NubTech Baddi Unit,Baddi,08:00:00,18:00:00,false

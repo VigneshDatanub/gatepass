@@ -1,0 +1,121 @@
+{
+  "_version": "1.49.0",
+  "sap.app": {
+    "id": "nub.gatepass.reports",
+    "type": "application",
+    "title": "Gate Reports",
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/gate-pass/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    },
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "description": "Visitor Gate Pass &amp; On-Site Register — NubTech Industries",
+    "i18n": "i18n/i18n.properties"
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.fe.templates": {}
+      }
+    },
+    "models": {
+      "": {
+        "dataSource": "mainService",
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router"
+      },
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "VisitorPassesList",
+          "target": "VisitorPassesList"
+        },
+        {
+          "pattern": "VisitorPasses({VisitorPassesKey}):?query:",
+          "name": "VisitorPassesObjectPage",
+          "target": "VisitorPassesObjectPage"
+        }
+      ],
+      "targets": {
+        "VisitorPassesList": {
+          "type": "Component",
+          "id": "VisitorPassesList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "entitySet": "VisitorPasses",
+              "navigation": {
+                "VisitorPasses": {
+                  "detail": {
+                    "route": "VisitorPassesObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.LineItem": {
+                  "qualifier": "DailyFootfall"
+                },
+                "@com.sap.vocabularies.UI.v1.SelectionFields": {
+                  "qualifier": "DailyFootfall"
+                },
+                "@com.sap.vocabularies.UI.v1.HeaderFacets": {
+                  "qualifier": "DailyFootfall"
+                },
+                "@com.sap.vocabularies.UI.v1.Facets": {
+                  "qualifier": "DailyFootfall"
+                }
+              }
+            }
+          }
+        },
+        "VisitorPassesObjectPage": {
+          "type": "Component",
+          "id": "VisitorPassesObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "entitySet": "VisitorPasses",
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.HeaderFacets": {
+                  "qualifier": "DailyFootfall"
+                },
+                "@com.sap.vocabularies.UI.v1.Facets": {
+                  "qualifier": "DailyFootfall"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "gatepass"
+  }
+}

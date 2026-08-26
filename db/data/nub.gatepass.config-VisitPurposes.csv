@@ -1,0 +1,8 @@
+code,name,descr
+SUPPLIER,Supplier Visit,Supplier or vendor meeting
+CUSTOMER,Customer Visit,Customer visit or audit
+INTERVIEW,Interview,Job interview
+SERVICE,Service Visit,AMC or breakdown engineer
+COURIER,Courier,Courier or delivery
+GOVT,Government Inspection,Statutory inspection
+OTHER,Other,Other purpose — requires purposeDetail

@@ -1,0 +1,9 @@
+code,name,descr,criticality
+DRAFT,Draft,Pass is being prepared,0
+REQUESTED,Requested,Awaiting supervisor approval,2
+APPROVED,Approved,Approved and ready for check-in,3
+REJECTED,Rejected,Rejected by the supervisor,1
+ON_SITE,On Site,Visitor is inside the plant,5
+CHECKED_OUT,Checked Out,Visitor has left the plant,3
+CANCELLED,Cancelled,Pass cancelled by the host,1
+EXPIRED,Expired,Pass expired without being used,1

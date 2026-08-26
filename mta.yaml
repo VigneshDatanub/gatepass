@@ -1,0 +1,177 @@
+_schema-version: 3.3.0
+ID: gatepass
+version: 1.0.0
+description: "Visitor Gate Pass &amp; On-Site Register — NubTech Industries"
+parameters:
+  enable-parallel-deployments: true
+  deploy_mode: html5-repo
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npm install
+        - npx cds build --production
+modules:
+  - name: gatepass-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      instances: 1
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: custom
+      commands:
+        - npm install --production
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: gatepass-auth
+      - name: gatepass-db
+      - name: gatepass-destination
+
+  - name: gatepass-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: gatepass-db
+
+  - name: gatepass-app-deployer
+    type: com.sap.application.content
+    path: gen
+    build-parameters:
+      build-result: app/
+      requires:
+        - name: gatepassgateconsole
+          artifacts:
+            - gate-console.zip
+          target-path: app/
+        - name: gatepassmypasses
+          artifacts:
+            - my-passes.zip
+          target-path: app/
+        - name: gatepassreports
+          artifacts:
+            - reports.zip
+          target-path: app/
+    requires:
+      - name: gatepass-auth
+      - name: srv-api
+      - name: gatepass-html5-repo-host
+        parameters:
+          content-target: true
+          config:
+            HTML5Runtime_enabled: true
+
+  - name: gatepassgateconsole
+    type: html5
+    path: app/gate-console
+    build-parameters:
+      builder: custom
+      commands:
+        - "node -e \"require('child_process').execSync('npx -y bestzip ../gate-console.zip *', {cwd: 'webapp'})\""
+      build-result: .
+      supported-platforms:
+        []
+  - name: gatepassmypasses
+    type: html5
+    path: app/my-passes
+    build-parameters:
+      builder: custom
+      commands:
+        - "node -e \"require('child_process').execSync('npx -y bestzip ../my-passes.zip *', {cwd: 'webapp'})\""
+      build-result: .
+      supported-platforms:
+        []
+  - name: gatepassreports
+    type: html5
+    path: app/reports
+    build-parameters:
+      builder: custom
+      commands:
+        - "node -e \"require('child_process').execSync('npx -y bestzip ../reports.zip *', {cwd: 'webapp'})\""
+      build-result: .
+      supported-platforms:
+        []
+  - name: gatepass-ui
+    type: approuter.nodejs
+    path: app/router
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api # must be used in xs-app.json as well
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: gatepass-auth
+      - name: gatepass-destination
+      - name: gatepass-html5-runtime
+    provides:
+      - name: app-api
+        properties:
+          app-protocol: ${protocol}
+          app-uri: ${default-uri}
+
+resources:
+  - name: gatepass-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: gatepass-${org}-${space}
+        tenant-mode: dedicated
+        oauth2-configuration:
+          credential-types:
+            - "binding-secret"
+            - "x509"
+          redirect-uris:
+            - https://*~{app-api/app-uri}/**
+        role-collections:
+          - name: 'Admin (gatepass ${org}-${space})'
+            description: 'generated'
+            role-template-references:
+              - '$XSAPPNAME.Admin'
+          - name: 'Host (gatepass ${org}-${space})'
+            description: 'generated'
+            role-template-references:
+              - '$XSAPPNAME.Host'
+          - name: 'SecurityGuard (gatepass ${org}-${space})'
+            description: 'generated'
+            role-template-references:
+              - '$XSAPPNAME.SecurityGuard'
+          - name: 'SecuritySupervisor (gatepass ${org}-${space})'
+            description: 'generated'
+            role-template-references:
+              - '$XSAPPNAME.SecuritySupervisor'
+    requires:
+      - name: app-api
+  - name: gatepass-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
+  - name: gatepass-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+
+  - name: gatepass-html5-repo-host
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-host
+  - name: gatepass-html5-runtime
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: html5-apps-repo
+      service-plan: app-runtime

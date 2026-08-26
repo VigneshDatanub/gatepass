@@ -1,0 +1,55 @@
+{
+  "scopes": [
+    {
+      "name": "$XSAPPNAME.Admin",
+      "description": "Admin"
+    },
+    {
+      "name": "$XSAPPNAME.Host",
+      "description": "Host"
+    },
+    {
+      "name": "$XSAPPNAME.SecurityGuard",
+      "description": "SecurityGuard"
+    },
+    {
+      "name": "$XSAPPNAME.SecuritySupervisor",
+      "description": "SecuritySupervisor"
+    }
+  ],
+  "attributes": [],
+  "role-templates": [
+    {
+      "name": "Admin",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Admin"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "Host",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.Host"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "SecurityGuard",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.SecurityGuard"
+      ],
+      "attribute-references": []
+    },
+    {
+      "name": "SecuritySupervisor",
+      "description": "generated",
+      "scope-references": [
+        "$XSAPPNAME.SecuritySupervisor"
+      ],
+      "attribute-references": []
+    }
+  ]
+}

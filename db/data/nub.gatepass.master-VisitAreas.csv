@@ -1,0 +1,9 @@
+code,plant_code,name,requiresApproval,requiresInduction,maxVisitorsOnSite,isActive
+OFFICE,1000,Administration Block,false,false,,true
+SHOPFLOOR,1000,Machine Shop & Assembly,true,true,15,true
+WAREHOUSE,1000,Finished Goods Warehouse,true,true,8,true
+RNDLAB,1000,R&D Laboratory,true,false,5,true
+CANTEEN,1000,Canteen Block,false,false,,true
+OFFICE,2000,Hosur Office,false,false,,true
+SHOPFLOOR,2000,Hosur Press Shop,true,true,20,true
+OLDBLOCK,1000,Old Admin Block (demolished),false,false,,false

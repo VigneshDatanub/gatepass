@@ -1,0 +1,7 @@
+ID,empNo,name,email,department,defaultPlant_code,isActive
+00000000-0000-0000-0000-000000001001,E1001,Anitha Raman,anitha.raman@nubtech.example,Purchase,1000,true
+00000000-0000-0000-0000-000000001002,E1002,Karthik Subramanian,karthik.s@nubtech.example,Production,1000,true
+00000000-0000-0000-0000-000000001003,E1003,Meera Joseph,meera.joseph@nubtech.example,Quality,1000,true
+00000000-0000-0000-0000-000000001004,E1004,Rakesh Bhatia,rakesh.bhatia@nubtech.example,Security,1000,true
+00000000-0000-0000-0000-000000001005,E1005,Suresh Iyer,suresh.iyer@nubtech.example,Maintenance,2000,true
+00000000-0000-0000-0000-000000001006,E1006,Deepak Nair,deepak.nair@nubtech.example,Purchase,1000,false
