@@ -68,26 +68,13 @@
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
-              "entitySet": "VisitorPasses",
+              "contextPath": "/VisitorPasses",
+              "annotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#DailyFootfall",
               "navigation": {
                 "VisitorPasses": {
                   "detail": {
                     "route": "VisitorPassesObjectPage"
                   }
-                }
-              },
-              "controlConfiguration": {
-                "@com.sap.vocabularies.UI.v1.LineItem": {
-                  "qualifier": "DailyFootfall"
-                },
-                "@com.sap.vocabularies.UI.v1.SelectionFields": {
-                  "qualifier": "DailyFootfall"
-                },
-                "@com.sap.vocabularies.UI.v1.HeaderFacets": {
-                  "qualifier": "DailyFootfall"
-                },
-                "@com.sap.vocabularies.UI.v1.Facets": {
-                  "qualifier": "DailyFootfall"
                 }
               }
             }
@@ -99,15 +86,7 @@
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
-              "entitySet": "VisitorPasses",
-              "controlConfiguration": {
-                "@com.sap.vocabularies.UI.v1.HeaderFacets": {
-                  "qualifier": "DailyFootfall"
-                },
-                "@com.sap.vocabularies.UI.v1.Facets": {
-                  "qualifier": "DailyFootfall"
-                }
-              }
+              "contextPath": "/VisitorPasses"
             }
           }
         }

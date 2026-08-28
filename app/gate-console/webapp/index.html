@@ -13,8 +13,15 @@
         data-sap-ui-async="true"
         data-sap-ui-frameOptions="trusted">
     </script>
+    <style>
+        html, body, #content, #container {
+            height: 100% !important;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 <body class="sapUiBody sapUiSizeCompact" id="content">
-    <div data-sap-ui-component data-name="nub.gatepass.gateconsole" data-id="container" data-settings='{"id" : "app"}'></div>
+    <div data-sap-ui-component data-name="nub.gatepass.gateconsole" data-id="container" data-settings='{"id" : "app"}' data-height="100%" style="height: 100%"></div>
 </body>
 </html>
