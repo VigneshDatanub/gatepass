@@ -44,14 +44,14 @@ annotate GatePassService.VisitorPasses with @(
                 Action: 'GatePassService.submit',
                 Label: '{i18n>Submit}',
                 // Only show submit when in DRAFT
-                ![@UI.Hidden]: {$edmJson: {$ne: [{$Path: 'status_code'}, 'DRAFT']}}
+                ![@UI.Hidden]: {$edmJson: {$Ne: [{$Path: 'status_code'}, 'DRAFT']}}
             },
             {
                 $Type: 'UI.DataFieldForAction',
                 Action: 'GatePassService.cancel',
                 Label: '{i18n>Cancel}',
                 // Cancel allowed in DRAFT, REQUESTED, APPROVED
-                ![@UI.Hidden]: {$edmJson: {$not: {$in: [{$Path: 'status_code'}, ['DRAFT', 'REQUESTED', 'APPROVED']]}}}
+                ![@UI.Hidden]: {$edmJson: {$Not: {$In: [{$Path: 'status_code'}, ['DRAFT', 'REQUESTED', 'APPROVED']]}}}
             },
             {
                 $Type: 'UI.DataFieldForAction',

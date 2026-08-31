@@ -34,39 +34,50 @@ annotate GatePassService.VisitorPasses with @(
             }
         },
 
+        // Importance ranks which columns a ResponsiveTable is allowed to
+        // drop first as the viewport narrows.  Approve/Reject and Status
+        // are marked High so they can never be the ones that disappear —
+        // without this, a table with this many columns silently hides the
+        // action buttons entirely on anything narrower than a wide desktop,
+        // which reads exactly like "there is no Approve button" even
+        // though the annotation and the action both work.
         LineItem #Approvals: [
-            { $Type: 'UI.DataField', Value: passNo },
-            { $Type: 'UI.DataField', Value: visitorName },
-            { $Type: 'UI.DataField', Value: visitorCompany },
-            { $Type: 'UI.DataField', Value: area_code },
-            { $Type: 'UI.DataField', Value: visitDate },
-            { $Type: 'UI.DataField', Value: validFrom },
-            { $Type: 'UI.DataField', Value: validTo },
+            { $Type: 'UI.DataField', Value: passNo, ![@UI.Importance]: #High },
+            { $Type: 'UI.DataField', Value: visitorName, ![@UI.Importance]: #High },
+            { $Type: 'UI.DataField', Value: visitorCompany, ![@UI.Importance]: #Low },
+            { $Type: 'UI.DataField', Value: area_code, ![@UI.Importance]: #Medium },
+            { $Type: 'UI.DataField', Value: visitDate, ![@UI.Importance]: #Low },
+            { $Type: 'UI.DataField', Value: validFrom, ![@UI.Importance]: #Low },
+            { $Type: 'UI.DataField', Value: validTo, ![@UI.Importance]: #Low },
             {
                 $Type: 'UI.DataField',
                 Value: ageingDays,
                 Label: '{i18n>AgeingDays}',
                 Criticality: #Critical,
-                CriticalityRepresentation: #WithoutIcon
+                CriticalityRepresentation: #WithoutIcon,
+                ![@UI.Importance]: #Medium
             },
             {
                 $Type: 'UI.DataField',
                 Value: status_code,
-                Criticality: status.criticality
+                Criticality: status.criticality,
+                ![@UI.Importance]: #High
             },
             {
                 $Type: 'UI.DataFieldForAction',
                 Action: 'GatePassService.approve',
                 Label: '{i18n>Approve}',
                 Inline: true,
-                ![@UI.Hidden]: { $edmJson: { $ne: [ { $Path: 'status_code' }, 'REQUESTED' ] } }
+                ![@UI.Importance]: #High,
+                ![@UI.Hidden]: { $edmJson: { $Ne: [ { $Path: 'status_code' }, 'REQUESTED' ] } }
             },
             {
                 $Type: 'UI.DataFieldForAction',
                 Action: 'GatePassService.rejectPass',
                 Label: '{i18n>Reject}',
                 Inline: true,
-                ![@UI.Hidden]: { $edmJson: { $ne: [ { $Path: 'status_code' }, 'REQUESTED' ] } }
+                ![@UI.Importance]: #High,
+                ![@UI.Hidden]: { $edmJson: { $Ne: [ { $Path: 'status_code' }, 'REQUESTED' ] } }
             }
         ],
 
@@ -80,13 +91,13 @@ annotate GatePassService.VisitorPasses with @(
                 $Type: 'UI.DataFieldForAction',
                 Action: 'GatePassService.approve',
                 Label: '{i18n>Approve}',
-                ![@UI.Hidden]: { $edmJson: { $ne: [ { $Path: 'status_code' }, 'REQUESTED' ] } }
+                ![@UI.Hidden]: { $edmJson: { $Ne: [ { $Path: 'status_code' }, 'REQUESTED' ] } }
             },
             {
                 $Type: 'UI.DataFieldForAction',
                 Action: 'GatePassService.rejectPass',
                 Label: '{i18n>Reject}',
-                ![@UI.Hidden]: { $edmJson: { $ne: [ { $Path: 'status_code' }, 'REQUESTED' ] } }
+                ![@UI.Hidden]: { $edmJson: { $Ne: [ { $Path: 'status_code' }, 'REQUESTED' ] } }
             }
         ],
 

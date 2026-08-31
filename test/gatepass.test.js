@@ -509,12 +509,21 @@ describe('GatePass — Section 13 acceptance tests', () => {
     const all = await GET(`${B}/VisitorPasses?$select=status_code,actualOutAt`, admin);
     assert.ok(all.data.value.filter((p) => p.status_code === 'ON_SITE').every((p) => !p.actualOutAt));
 
-    // BR-14 — masking by role, on an APPROVED pass the guard is about to admit
-    const approved = SEED.approvedToday;
-    assert.equal((await readAs(approved, admin)).data.idProofNumber, '123456789012', 'Admin sees it in full');
-    assert.equal((await readAs(approved, guard1)).data.idProofNumber, '123456789012', 'the guard sees it in full at check-in');
-    assert.equal((await readAs(approved, anitha)).data.idProofNumber, '****9012', 'the host sees it masked');
-    assert.equal((await readAs(approved, rakesh)).data.idProofNumber, '****9012', 'the supervisor sees it masked');
+    // BR-14 — masking by role, on an APPROVED pass the guard is about to
+    // admit.  Raised fresh rather than reusing a Section 12.5 seed row:
+    // the seeded passes' validTo is a fixed clock time, and TC-11's
+    // day-end job (run earlier in this suite) will have already expired
+    // one once the wall clock passes it — this pass's window is anchored
+    // to "now" instead, so it stays APPROVED regardless of time of day.
+    const approved = await raisePass(anitha, {
+      visitorMobile: '9876500020', idProofNumber: 'ZZZZZ1234Z',
+      validFrom: clockIn(-30), validTo: clockIn(200)
+    });
+    await POST(`${B}/VisitorPasses(ID=${approved},IsActiveEntity=true)/GatePassService.submit`, {}, anitha);
+    assert.equal((await readAs(approved, admin)).data.idProofNumber, 'ZZZZZ1234Z', 'Admin sees it in full');
+    assert.equal((await readAs(approved, guard1)).data.idProofNumber, 'ZZZZZ1234Z', 'the guard sees it in full at check-in');
+    assert.equal((await readAs(approved, anitha)).data.idProofNumber, '****234Z', 'the host sees it masked');
+    assert.equal((await readAs(approved, rakesh)).data.idProofNumber, '****234Z', 'the supervisor sees it masked');
 
     // and it stays masked when the pass is reached through an $expand
     const viaItems = await GET(`${B}/PassItems?$expand=pass($select=idProofNumber)&$top=5`, anitha);

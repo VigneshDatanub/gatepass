@@ -42,31 +42,38 @@ annotate GatePassService.VisitorPasses with @(
             }
         },
 
+        // Importance ranks which columns a ResponsiveTable may drop first
+        // as the viewport narrows — Check In/Out and Status are pinned
+        // High so a guard on a smaller screen never loses the one button
+        // they came here to press.
         LineItem #GateConsole: [
-            { $Type: 'UI.DataField', Value: passNo },
-            { $Type: 'UI.DataField', Value: visitorName },
-            { $Type: 'UI.DataField', Value: visitorCompany },
-            { $Type: 'UI.DataField', Value: validFrom },
-            { $Type: 'UI.DataField', Value: validTo },
-            { $Type: 'UI.DataField', Value: badgeNo },
+            { $Type: 'UI.DataField', Value: passNo, ![@UI.Importance]: #High },
+            { $Type: 'UI.DataField', Value: visitorName, ![@UI.Importance]: #High },
+            { $Type: 'UI.DataField', Value: visitorCompany, ![@UI.Importance]: #Low },
+            { $Type: 'UI.DataField', Value: validFrom, ![@UI.Importance]: #Medium },
+            { $Type: 'UI.DataField', Value: validTo, ![@UI.Importance]: #Low },
+            { $Type: 'UI.DataField', Value: badgeNo, ![@UI.Importance]: #Medium },
             {
                 $Type: 'UI.DataField',
                 Value: status_code,
-                Criticality: status.criticality
+                Criticality: status.criticality,
+                ![@UI.Importance]: #High
             },
             {
                 $Type: 'UI.DataFieldForAction',
                 Action: 'GatePassService.checkIn',
                 Label: '{i18n>CheckIn}',
                 Inline: true,
-                ![@UI.Hidden]: {$edmJson: {$ne: [{$Path: 'status_code'}, 'APPROVED']}}
+                ![@UI.Importance]: #High,
+                ![@UI.Hidden]: {$edmJson: {$Ne: [{$Path: 'status_code'}, 'APPROVED']}}
             },
             {
                 $Type: 'UI.DataFieldForAction',
                 Action: 'GatePassService.checkOut',
                 Label: '{i18n>CheckOut}',
                 Inline: true,
-                ![@UI.Hidden]: {$edmJson: {$ne: [{$Path: 'status_code'}, 'ON_SITE']}}
+                ![@UI.Importance]: #High,
+                ![@UI.Hidden]: {$edmJson: {$Ne: [{$Path: 'status_code'}, 'ON_SITE']}}
             }
         ],
 

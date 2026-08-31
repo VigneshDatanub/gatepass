@@ -1,0 +1,116 @@
+{
+  "_version": "1.49.0",
+  "sap.app": {
+    "id": "nub.gatepass.adminplants",
+    "type": "application",
+    "title": "Admin Console — Plants",
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/gate-pass/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    },
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "description": "Visitor Gate Pass &amp; On-Site Register — NubTech Industries",
+    "i18n": "i18n/i18n.properties"
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.fe.templates": {}
+      }
+    },
+    "models": {
+      "": {
+        "dataSource": "mainService",
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router"
+      },
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "PlantsList",
+          "target": "PlantsList"
+        },
+        {
+          "pattern": "Plants({PlantsKey}):?query:",
+          "name": "PlantsObjectPage",
+          "target": "PlantsObjectPage"
+        }
+      ],
+      "targets": {
+        "PlantsList": {
+          "type": "Component",
+          "id": "PlantsList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/Plants",
+              "initialLoad": true,
+              "navigation": {
+                "Plants": {
+                  "detail": {
+                    "route": "PlantsObjectPage"
+                  }
+                }
+              },
+              "content": {
+                "header": {
+                  "actions": {
+                    "runDayEndJob": {
+                      "id": "runDayEndJobButton",
+                      "text": "{i18n>RunDayEndJob}",
+                      "press": "nub.gatepass.adminplants.ext.Extension.onRunDayEndJob",
+                      "requiresSelection": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "PlantsObjectPage": {
+          "type": "Component",
+          "id": "PlantsObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/Plants"
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "gatepass"
+  }
+}

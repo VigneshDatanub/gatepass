@@ -18,8 +18,9 @@ annotate GatePassService.VisitorFootfall with {
     purpose     @title: '{i18n>Purpose}';
     visitYear   @title: '{i18n>VisitYear}';
     visitMonth  @title: '{i18n>VisitMonth}';
-    passCount   @title: '{i18n>PassCount}';
-    avgDuration @title: '{i18n>AvgDuration}';
+    passCount    @title: '{i18n>PassCount}';
+    avgDuration  @title: '{i18n>AvgDuration}';
+    totalMinutes @title: '{i18n>TotalMinutes}';
 };
 
 annotate GatePassService.VisitorFootfall with @(

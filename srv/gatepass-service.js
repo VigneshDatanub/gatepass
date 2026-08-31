@@ -319,9 +319,14 @@ export default class GatePassService extends cds.ApplicationService {
 
       assertTransition(pass.status_code, 'submit', req);
 
+      // VisitAreas is keyed by (code, plant); Section 6.1 requires the area
+      // to belong to the chosen plant anyway, so pass.plant_code — not the
+      // separate area_plant_code foreign-key column — is the value that
+      // resolves it. This also means a value-help or API client that only
+      // ever sets area_code still finds the right row.
       const [area, plant, host] = await Promise.all([
         pass.area_code
-          ? SELECT.one.from(VisitAreas).where({ code: pass.area_code, plant_code: pass.area_plant_code })
+          ? SELECT.one.from(VisitAreas).where({ code: pass.area_code, plant_code: pass.plant_code })
           : null,
         pass.plant_code ? SELECT.one.from(Plants).where({ code: pass.plant_code }) : null,
         pass.host_ID ? SELECT.one.from(Employees).where({ ID: pass.host_ID }) : null
@@ -508,7 +513,7 @@ export default class GatePassService extends cds.ApplicationService {
       // BR-05 again, at the gate: "An expired induction cannot reach the
       // shop floor."  Checked against today, not against visitDate.
       const area = pass.area_code
-        ? await SELECT.one.from(VisitAreas).where({ code: pass.area_code, plant_code: pass.area_plant_code })
+        ? await SELECT.one.from(VisitAreas).where({ code: pass.area_code, plant_code: pass.plant_code })
         : null;
       if (area?.requiresInduction) {
         if (!pass.inductionRef) err('BR05_INDUCTION_REQUIRED', [area.name]);

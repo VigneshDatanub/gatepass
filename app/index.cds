@@ -4,3 +4,4 @@ using from './approvals/annotations';
 using from './gate-console/annotations';
 using from './reports/annotations';
 using from './footfall/annotations';
+using from './admin/annotations';

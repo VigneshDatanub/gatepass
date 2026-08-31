@@ -111,22 +111,44 @@ service GatePassService {
   // Section 9, row 4: "C R U — deactivate, never hard delete".
   // DELETE is granted to nobody, so isActive is the only way out.
 
+  // DeleteRestrictions hides the generic Delete button in Fiori Elements
+  // outright — nobody is ever granted DELETE (see the handler-level
+  // MASTER_NO_DELETE guard too), so a visible-but-forbidden button would
+  // just be a worse UX for the same, already-enforced rule.
   @restrict: [
     { grant: ['READ', 'CREATE', 'UPDATE'], to: 'Admin' },
     { grant: 'READ', to: ['Host', 'SecurityGuard', 'SecuritySupervisor'] }
   ]
+  @Capabilities.DeleteRestrictions.Deletable: false
+  // Draft-enabled for the same reason VisitorPasses is: it is the editing
+  // flow Fiori Elements supports out of the box (Edit -> change -> Save /
+  // Cancel).  Without it the generated Object Page renders read-only with
+  // no Edit button, whatever the Capabilities annotations say.
+  @odata.draft.enabled
   entity Plants     as projection on gatepass.master.Plants;
 
   @restrict: [
     { grant: ['READ', 'CREATE', 'UPDATE'], to: 'Admin' },
     { grant: 'READ', to: ['Host', 'SecurityGuard', 'SecuritySupervisor'] }
   ]
+  @Capabilities.DeleteRestrictions.Deletable: false
+  // Draft-enabled for the same reason VisitorPasses is: it is the editing
+  // flow Fiori Elements supports out of the box (Edit -> change -> Save /
+  // Cancel).  Without it the generated Object Page renders read-only with
+  // no Edit button, whatever the Capabilities annotations say.
+  @odata.draft.enabled
   entity Employees  as projection on gatepass.master.Employees;
 
   @restrict: [
     { grant: ['READ', 'CREATE', 'UPDATE'], to: 'Admin' },
     { grant: 'READ', to: ['Host', 'SecurityGuard', 'SecuritySupervisor'] }
   ]
+  @Capabilities.DeleteRestrictions.Deletable: false
+  // Draft-enabled for the same reason VisitorPasses is: it is the editing
+  // flow Fiori Elements supports out of the box (Edit -> change -> Save /
+  // Cancel).  Without it the generated Object Page renders read-only with
+  // no Edit button, whatever the Capabilities annotations say.
+  @odata.draft.enabled
   entity VisitAreas as projection on gatepass.master.VisitAreas;
 
   // Code lists — read-only for everyone

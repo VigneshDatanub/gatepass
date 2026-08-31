@@ -65,6 +65,18 @@ modules:
           artifacts:
             - footfall.zip
           target-path: app/
+        - name: gatepassadminplants
+          artifacts:
+            - admin-plants.zip
+          target-path: app/
+        - name: gatepassadminemployees
+          artifacts:
+            - admin-employees.zip
+          target-path: app/
+        - name: gatepassadminareas
+          artifacts:
+            - admin-areas.zip
+          target-path: app/
     requires:
       - name: gatepass-auth
       - name: srv-api
@@ -121,6 +133,36 @@ modules:
       builder: custom
       commands:
         - "node -e \"require('child_process').execSync('npx -y bestzip ../footfall.zip *', {cwd: 'webapp'})\""
+      build-result: .
+      supported-platforms:
+        []
+  - name: gatepassadminplants
+    type: html5
+    path: app/admin-plants
+    build-parameters:
+      builder: custom
+      commands:
+        - "node -e \"require('child_process').execSync('npx -y bestzip ../admin-plants.zip *', {cwd: 'webapp'})\""
+      build-result: .
+      supported-platforms:
+        []
+  - name: gatepassadminemployees
+    type: html5
+    path: app/admin-employees
+    build-parameters:
+      builder: custom
+      commands:
+        - "node -e \"require('child_process').execSync('npx -y bestzip ../admin-employees.zip *', {cwd: 'webapp'})\""
+      build-result: .
+      supported-platforms:
+        []
+  - name: gatepassadminareas
+    type: html5
+    path: app/admin-areas
+    build-parameters:
+      builder: custom
+      commands:
+        - "node -e \"require('child_process').execSync('npx -y bestzip ../admin-areas.zip *', {cwd: 'webapp'})\""
       build-result: .
       supported-platforms:
         []

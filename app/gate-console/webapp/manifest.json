@@ -79,6 +79,11 @@
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.SelectionFields": {
                   "annotationPath": "com.sap.vocabularies.UI.v1.SelectionFields#GateConsole"
+                },
+                "@com.sap.vocabularies.UI.v1.LineItem#GateConsole": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable"
+                  }
                 }
               },
               "views": {

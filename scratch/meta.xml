@@ -1,0 +1,2886 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml">
+    <edmx:Include Alias="Capabilities" Namespace="Org.OData.Capabilities.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/Common.xml">
+    <edmx:Include Alias="Common" Namespace="com.sap.vocabularies.Common.v1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+    <edmx:Include Alias="Core" Namespace="Org.OData.Core.V1"/>
+  </edmx:Reference>
+  <edmx:Reference Uri="https://sap.github.io/odata-vocabularies/vocabularies/UI.xml">
+    <edmx:Include Alias="UI" Namespace="com.sap.vocabularies.UI.v1"/>
+  </edmx:Reference>
+  <edmx:DataServices>
+    <Schema Namespace="GatePassService" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Annotation Term="Core.Links">
+        <Collection>
+          <Record>
+            <PropertyValue Property="rel" String="author"/>
+            <PropertyValue Property="href" String="https://cap.cloud.sap"/>
+          </Record>
+        </Collection>
+      </Annotation>
+      <EntityContainer Name="EntityContainer">
+        <EntitySet Name="VisitorPasses" EntityType="GatePassService.VisitorPasses">
+          <NavigationPropertyBinding Path="host" Target="Employees"/>
+          <NavigationPropertyBinding Path="plant" Target="Plants"/>
+          <NavigationPropertyBinding Path="area" Target="VisitAreas"/>
+          <NavigationPropertyBinding Path="purpose" Target="VisitPurposes"/>
+          <NavigationPropertyBinding Path="idProofType" Target="IdProofTypes"/>
+          <NavigationPropertyBinding Path="status" Target="PassStatus"/>
+          <NavigationPropertyBinding Path="items" Target="PassItems"/>
+          <NavigationPropertyBinding Path="events" Target="PassEvents"/>
+          <NavigationPropertyBinding Path="SiblingEntity" Target="VisitorPasses"/>
+        </EntitySet>
+        <EntitySet Name="Employees" EntityType="GatePassService.Employees">
+          <NavigationPropertyBinding Path="defaultPlant" Target="Plants"/>
+        </EntitySet>
+        <EntitySet Name="Plants" EntityType="GatePassService.Plants"/>
+        <EntitySet Name="VisitAreas" EntityType="GatePassService.VisitAreas">
+          <NavigationPropertyBinding Path="plant" Target="Plants"/>
+        </EntitySet>
+        <EntitySet Name="VisitPurposes" EntityType="GatePassService.VisitPurposes">
+          <NavigationPropertyBinding Path="texts" Target="VisitPurposes_texts"/>
+          <NavigationPropertyBinding Path="localized" Target="VisitPurposes_texts"/>
+        </EntitySet>
+        <EntitySet Name="IdProofTypes" EntityType="GatePassService.IdProofTypes">
+          <NavigationPropertyBinding Path="texts" Target="IdProofTypes_texts"/>
+          <NavigationPropertyBinding Path="localized" Target="IdProofTypes_texts"/>
+        </EntitySet>
+        <EntitySet Name="PassStatus" EntityType="GatePassService.PassStatus">
+          <NavigationPropertyBinding Path="texts" Target="PassStatus_texts"/>
+          <NavigationPropertyBinding Path="localized" Target="PassStatus_texts"/>
+        </EntitySet>
+        <EntitySet Name="PassItems" EntityType="GatePassService.PassItems">
+          <NavigationPropertyBinding Path="pass" Target="VisitorPasses"/>
+          <NavigationPropertyBinding Path="SiblingEntity" Target="PassItems"/>
+        </EntitySet>
+        <EntitySet Name="PassEvents" EntityType="GatePassService.PassEvents">
+          <NavigationPropertyBinding Path="pass" Target="VisitorPasses"/>
+          <NavigationPropertyBinding Path="SiblingEntity" Target="PassEvents"/>
+        </EntitySet>
+        <EntitySet Name="VisitorFootfall" EntityType="GatePassService.VisitorFootfall"/>
+        <EntitySet Name="VisitPurposes_texts" EntityType="GatePassService.VisitPurposes_texts"/>
+        <EntitySet Name="IdProofTypes_texts" EntityType="GatePassService.IdProofTypes_texts"/>
+        <EntitySet Name="PassStatus_texts" EntityType="GatePassService.PassStatus_texts"/>
+        <ActionImport Name="runDayEndJob" Action="GatePassService.runDayEndJob"/>
+      </EntityContainer>
+      <EntityType Name="VisitorPasses">
+        <Key>
+          <PropertyRef Name="ID"/>
+          <PropertyRef Name="IsActiveEntity"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="passNo" Type="Edm.String" MaxLength="20"/>
+        <NavigationProperty Name="host" Type="GatePassService.Employees">
+          <ReferentialConstraint Property="host_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="host_ID" Type="Edm.Guid"/>
+        <NavigationProperty Name="plant" Type="GatePassService.Plants">
+          <ReferentialConstraint Property="plant_code" ReferencedProperty="code"/>
+        </NavigationProperty>
+        <Property Name="plant_code" Type="Edm.String" MaxLength="4"/>
+        <NavigationProperty Name="area" Type="GatePassService.VisitAreas">
+          <ReferentialConstraint Property="area_code" ReferencedProperty="code"/>
+          <ReferentialConstraint Property="area_plant_code" ReferencedProperty="plant_code"/>
+        </NavigationProperty>
+        <Property Name="area_code" Type="Edm.String" MaxLength="20"/>
+        <Property Name="area_plant_code" Type="Edm.String" MaxLength="4"/>
+        <NavigationProperty Name="purpose" Type="GatePassService.VisitPurposes">
+          <ReferentialConstraint Property="purpose_code" ReferencedProperty="code"/>
+        </NavigationProperty>
+        <Property Name="purpose_code" Type="Edm.String" MaxLength="12"/>
+        <Property Name="purposeDetail" Type="Edm.String" MaxLength="200"/>
+        <Property Name="visitorName" Type="Edm.String" MaxLength="80"/>
+        <Property Name="visitorCompany" Type="Edm.String" MaxLength="80"/>
+        <Property Name="visitorMobile" Type="Edm.String" MaxLength="10"/>
+        <NavigationProperty Name="idProofType" Type="GatePassService.IdProofTypes">
+          <ReferentialConstraint Property="idProofType_code" ReferencedProperty="code"/>
+        </NavigationProperty>
+        <Property Name="idProofType_code" Type="Edm.String" MaxLength="12"/>
+        <Property Name="idProofNumber" Type="Edm.String" MaxLength="20"/>
+        <Property Name="visitDate" Type="Edm.Date"/>
+        <Property Name="validFrom" Type="Edm.TimeOfDay"/>
+        <Property Name="validTo" Type="Edm.TimeOfDay"/>
+        <Property Name="inductionRef" Type="Edm.String" MaxLength="30"/>
+        <Property Name="inductionValidTill" Type="Edm.Date"/>
+        <Property Name="vehicleNo" Type="Edm.String" MaxLength="15"/>
+        <NavigationProperty Name="status" Type="GatePassService.PassStatus">
+          <ReferentialConstraint Property="status_code" ReferencedProperty="code"/>
+        </NavigationProperty>
+        <Property Name="status_code" Type="Edm.String" MaxLength="12"/>
+        <Property Name="badgeNo" Type="Edm.String" MaxLength="10"/>
+        <Property Name="actualInAt" Type="Edm.DateTimeOffset"/>
+        <Property Name="actualOutAt" Type="Edm.DateTimeOffset"/>
+        <Property Name="durationMinutes" Type="Edm.Int32"/>
+        <Property Name="isOverstay" Type="Edm.Boolean" DefaultValue="false"/>
+        <Property Name="rejectionReason" Type="Edm.String" MaxLength="200"/>
+        <NavigationProperty Name="items" Type="Collection(GatePassService.PassItems)" Partner="pass">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="events" Type="Collection(GatePassService.PassEvents)" Partner="pass">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <Property Name="ageingDays" Type="Edm.Int32"/>
+        <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+        <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+        <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+        <NavigationProperty Name="DraftAdministrativeData" Type="GatePassService.DraftAdministrativeData" ContainsTarget="true"/>
+        <NavigationProperty Name="SiblingEntity" Type="GatePassService.VisitorPasses"/>
+        <Property Name="DraftMessages" Type="Collection(GatePassService.DRAFT_DraftAdministrativeData_DraftMessage)" Nullable="true"/>
+      </EntityType>
+      <EntityType Name="Employees">
+        <Key>
+          <PropertyRef Name="ID"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="empNo" Type="Edm.String" MaxLength="10"/>
+        <Property Name="name" Type="Edm.String" MaxLength="80"/>
+        <Property Name="email" Type="Edm.String" MaxLength="100"/>
+        <Property Name="department" Type="Edm.String" MaxLength="40"/>
+        <NavigationProperty Name="defaultPlant" Type="GatePassService.Plants">
+          <ReferentialConstraint Property="defaultPlant_code" ReferencedProperty="code"/>
+        </NavigationProperty>
+        <Property Name="defaultPlant_code" Type="Edm.String" MaxLength="4"/>
+        <Property Name="isActive" Type="Edm.Boolean" DefaultValue="true"/>
+      </EntityType>
+      <EntityType Name="Plants">
+        <Key>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="code" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="100"/>
+        <Property Name="city" Type="Edm.String" MaxLength="40"/>
+        <Property Name="gateOpenTime" Type="Edm.TimeOfDay"/>
+        <Property Name="gateCloseTime" Type="Edm.TimeOfDay"/>
+        <Property Name="isActive" Type="Edm.Boolean" DefaultValue="true"/>
+      </EntityType>
+      <EntityType Name="VisitAreas">
+        <Key>
+          <PropertyRef Name="code"/>
+          <PropertyRef Name="plant_code"/>
+        </Key>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="code" Type="Edm.String" MaxLength="20" Nullable="false"/>
+        <NavigationProperty Name="plant" Type="GatePassService.Plants">
+          <ReferentialConstraint Property="plant_code" ReferencedProperty="code"/>
+        </NavigationProperty>
+        <Property Name="plant_code" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="100"/>
+        <Property Name="requiresApproval" Type="Edm.Boolean" DefaultValue="false"/>
+        <Property Name="requiresInduction" Type="Edm.Boolean" DefaultValue="false"/>
+        <Property Name="maxVisitorsOnSite" Type="Edm.Int32"/>
+        <Property Name="isActive" Type="Edm.Boolean" DefaultValue="true"/>
+      </EntityType>
+      <EntityType Name="VisitPurposes">
+        <Key>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <NavigationProperty Name="texts" Type="Collection(GatePassService.VisitPurposes_texts)">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="localized" Type="GatePassService.VisitPurposes_texts">
+          <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="IdProofTypes">
+        <Key>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <NavigationProperty Name="texts" Type="Collection(GatePassService.IdProofTypes_texts)">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="localized" Type="GatePassService.IdProofTypes_texts">
+          <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="PassStatus">
+        <Key>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <Property Name="criticality" Type="Edm.Int32"/>
+        <NavigationProperty Name="texts" Type="Collection(GatePassService.PassStatus_texts)">
+          <OnDelete Action="Cascade"/>
+        </NavigationProperty>
+        <NavigationProperty Name="localized" Type="GatePassService.PassStatus_texts">
+          <ReferentialConstraint Property="code" ReferencedProperty="code"/>
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="PassItems">
+        <Key>
+          <PropertyRef Name="ID"/>
+          <PropertyRef Name="IsActiveEntity"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="createdAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="createdBy" Type="Edm.String" MaxLength="255"/>
+        <Property Name="modifiedAt" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="modifiedBy" Type="Edm.String" MaxLength="255"/>
+        <NavigationProperty Name="pass" Type="GatePassService.VisitorPasses" Partner="items">
+          <ReferentialConstraint Property="pass_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="pass_ID" Type="Edm.Guid"/>
+        <Property Name="itemNo" Type="Edm.Int32"/>
+        <Property Name="description" Type="Edm.String" MaxLength="100"/>
+        <Property Name="serialNo" Type="Edm.String" MaxLength="40"/>
+        <Property Name="quantity" Type="Edm.Int32" DefaultValue="1"/>
+        <Property Name="isReturnable" Type="Edm.Boolean" DefaultValue="true"/>
+        <Property Name="returnedAtExit" Type="Edm.Boolean" DefaultValue="false"/>
+        <Property Name="exitRemark" Type="Edm.String" MaxLength="100"/>
+        <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+        <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+        <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+        <NavigationProperty Name="DraftAdministrativeData" Type="GatePassService.DraftAdministrativeData" ContainsTarget="true"/>
+        <NavigationProperty Name="SiblingEntity" Type="GatePassService.PassItems"/>
+        <Property Name="DraftMessages" Type="Collection(GatePassService.DRAFT_DraftAdministrativeData_DraftMessage)" Nullable="true"/>
+      </EntityType>
+      <EntityType Name="PassEvents">
+        <Key>
+          <PropertyRef Name="ID"/>
+          <PropertyRef Name="IsActiveEntity"/>
+        </Key>
+        <Property Name="ID" Type="Edm.Guid" Nullable="false"/>
+        <NavigationProperty Name="pass" Type="GatePassService.VisitorPasses" Partner="events">
+          <ReferentialConstraint Property="pass_ID" ReferencedProperty="ID"/>
+        </NavigationProperty>
+        <Property Name="pass_ID" Type="Edm.Guid"/>
+        <Property Name="seq" Type="Edm.Int32"/>
+        <Property Name="fromStatus" Type="Edm.String" MaxLength="12"/>
+        <Property Name="toStatus" Type="Edm.String" MaxLength="12"/>
+        <Property Name="action" Type="Edm.String" MaxLength="20"/>
+        <Property Name="actor" Type="Edm.String" MaxLength="80"/>
+        <Property Name="actedAt" Type="Edm.DateTimeOffset"/>
+        <Property Name="remark" Type="Edm.String" MaxLength="200"/>
+        <Property Name="IsActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="true"/>
+        <Property Name="HasActiveEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+        <Property Name="HasDraftEntity" Type="Edm.Boolean" Nullable="false" DefaultValue="false"/>
+        <NavigationProperty Name="DraftAdministrativeData" Type="GatePassService.DraftAdministrativeData" ContainsTarget="true"/>
+        <NavigationProperty Name="SiblingEntity" Type="GatePassService.PassEvents"/>
+        <Property Name="DraftMessages" Type="Collection(GatePassService.DRAFT_DraftAdministrativeData_DraftMessage)" Nullable="true"/>
+      </EntityType>
+      <EntityType Name="VisitorFootfall">
+        <Key>
+          <PropertyRef Name="plant"/>
+          <PropertyRef Name="area"/>
+          <PropertyRef Name="purpose"/>
+          <PropertyRef Name="visitYear"/>
+          <PropertyRef Name="visitMonth"/>
+        </Key>
+        <Property Name="plant" Type="Edm.String" MaxLength="4" Nullable="false"/>
+        <Property Name="area" Type="Edm.String" MaxLength="20" Nullable="false"/>
+        <Property Name="purpose" Type="Edm.String" MaxLength="12" Nullable="false"/>
+        <Property Name="visitYear" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="visitMonth" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="passCount" Type="Edm.Int32"/>
+        <Property Name="avgDuration" Type="Edm.Decimal" Precision="10" Scale="1"/>
+        <Property Name="totalMinutes" Type="Edm.Int32"/>
+      </EntityType>
+      <EntityType Name="DraftAdministrativeData">
+        <Key>
+          <PropertyRef Name="DraftUUID"/>
+        </Key>
+        <Property Name="DraftUUID" Type="Edm.Guid" Nullable="false"/>
+        <Property Name="CreationDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="CreatedByUser" Type="Edm.String" MaxLength="256"/>
+        <Property Name="DraftIsCreatedByMe" Type="Edm.Boolean"/>
+        <Property Name="LastChangeDateTime" Type="Edm.DateTimeOffset" Precision="7"/>
+        <Property Name="LastChangedByUser" Type="Edm.String" MaxLength="256"/>
+        <Property Name="InProcessByUser" Type="Edm.String" MaxLength="256"/>
+        <Property Name="DraftIsProcessedByMe" Type="Edm.Boolean"/>
+      </EntityType>
+      <EntityType Name="VisitPurposes_texts">
+        <Key>
+          <PropertyRef Name="locale"/>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="12" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="IdProofTypes_texts">
+        <Key>
+          <PropertyRef Name="locale"/>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="12" Nullable="false"/>
+      </EntityType>
+      <EntityType Name="PassStatus_texts">
+        <Key>
+          <PropertyRef Name="locale"/>
+          <PropertyRef Name="code"/>
+        </Key>
+        <Property Name="locale" Type="Edm.String" MaxLength="14" Nullable="false"/>
+        <Property Name="name" Type="Edm.String" MaxLength="255"/>
+        <Property Name="descr" Type="Edm.String" MaxLength="1000"/>
+        <Property Name="code" Type="Edm.String" MaxLength="12" Nullable="false"/>
+      </EntityType>
+      <ComplexType Name="DRAFT_DraftAdministrativeData_DraftMessage">
+        <Property Name="code" Type="Edm.String"/>
+        <Property Name="message" Type="Edm.String"/>
+        <Property Name="target" Type="Edm.String"/>
+        <Property Name="additionalTargets" Type="Collection(Edm.String)" Nullable="true"/>
+        <Property Name="transition" Type="Edm.Boolean"/>
+        <Property Name="numericSeverity" Type="Edm.Byte"/>
+        <Property Name="longtextUrl" Type="Edm.String"/>
+      </ComplexType>
+      <ComplexType Name="ItemConfirmation">
+        <Property Name="ID" Type="Edm.Guid"/>
+        <Property Name="returnedAtExit" Type="Edm.Boolean"/>
+        <Property Name="exitRemark" Type="Edm.String" MaxLength="100"/>
+      </ComplexType>
+      <ComplexType Name="return_GatePassService_runDayEndJob">
+        <Property Name="expired" Type="Edm.Int32"/>
+        <Property Name="overstay" Type="Edm.Int32"/>
+      </ComplexType>
+      <Action Name="submit" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="approve" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="rejectPass" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <Parameter Name="reason" Type="Edm.String" MaxLength="200"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="cancel" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="checkIn" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <Parameter Name="badgeNo" Type="Edm.String" MaxLength="10"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="checkOut" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <Parameter Name="items" Type="Collection(GatePassService.ItemConfirmation)" Nullable="true"/>
+        <Parameter Name="remark" Type="Edm.String" MaxLength="200"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="copy" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.PassItems"/>
+        <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+        <ReturnType Type="GatePassService.PassItems"/>
+      </Action>
+      <Action Name="draftPrepare" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.PassEvents"/>
+        <Parameter Name="SideEffectsQualifier" Type="Edm.String"/>
+        <ReturnType Type="GatePassService.PassEvents"/>
+      </Action>
+      <Action Name="draftActivate" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="draftEdit" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.VisitorPasses"/>
+        <Parameter Name="PreserveChanges" Type="Edm.Boolean"/>
+        <ReturnType Type="GatePassService.VisitorPasses"/>
+      </Action>
+      <Action Name="confirmReturn" IsBound="true" EntitySetPath="in">
+        <Parameter Name="in" Type="GatePassService.PassItems"/>
+        <Parameter Name="returned" Type="Edm.Boolean"/>
+        <Parameter Name="exitRemark" Type="Edm.String" MaxLength="100"/>
+        <ReturnType Type="GatePassService.PassItems"/>
+      </Action>
+      <Action Name="runDayEndJob" IsBound="false">
+        <ReturnType Type="GatePassService.return_GatePassService_runDayEndJob"/>
+      </Action>
+      <Annotations Target="GatePassService.EntityContainer">
+        <Annotation Term="Common.AddressViaNavigationPath" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses">
+        <Annotation Term="UI.SelectionFields" Qualifier="Approvals">
+          <Collection>
+            <PropertyPath>plant_code</PropertyPath>
+            <PropertyPath>visitDate</PropertyPath>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="PendingApproval">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="Awaiting My Approval"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="REQUESTED"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="createdAt"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#Approvals</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.LineItem" Qualifier="Approvals">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="passNo"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitorName"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitorCompany"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="area_code"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitDate"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="validFrom"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="validTo"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="ageingDays"/>
+              <PropertyValue Property="Label" String="Waiting (days)"/>
+              <PropertyValue Property="Criticality" EnumMember="UI.CriticalityType/Critical"/>
+              <PropertyValue Property="CriticalityRepresentation" EnumMember="UI.CriticalityRepresentationType/WithoutIcon"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="status_code"/>
+              <PropertyValue Property="Criticality" Path="status/criticality"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+            </Record>
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="GatePassService.approve"/>
+              <PropertyValue Property="Label" String="Approve"/>
+              <PropertyValue Property="Inline" Bool="true"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+              <Annotation Term="UI.Hidden">
+                <Ne>
+                  <Path>status_code</Path>
+                  <String>REQUESTED</String>
+                </Ne>
+              </Annotation>
+            </Record>
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="GatePassService.rejectPass"/>
+              <PropertyValue Property="Label" String="Reject"/>
+              <PropertyValue Property="Inline" Bool="true"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+              <Annotation Term="UI.Hidden">
+                <Ne>
+                  <Path>status_code</Path>
+                  <String>REQUESTED</String>
+                </Ne>
+              </Annotation>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.HeaderFacets" Qualifier="Approvals">
+          <Collection>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Status"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.Identification" Qualifier="Approvals">
+          <Collection>
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="GatePassService.approve"/>
+              <PropertyValue Property="Label" String="Approve"/>
+              <Annotation Term="UI.Hidden">
+                <Ne>
+                  <Path>status_code</Path>
+                  <String>REQUESTED</String>
+                </Ne>
+              </Annotation>
+            </Record>
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="GatePassService.rejectPass"/>
+              <PropertyValue Property="Label" String="Reject"/>
+              <Annotation Term="UI.Hidden">
+                <Ne>
+                  <Path>status_code</Path>
+                  <String>REQUESTED</String>
+                </Ne>
+              </Annotation>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.Facets" Qualifier="Approvals">
+          <Collection>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#RequestDetails"/>
+              <PropertyValue Property="Label" String="Visit"/>
+            </Record>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#VisitorDetails"/>
+              <PropertyValue Property="Label" String="Visitor Identity"/>
+            </Record>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="items/@UI.LineItem"/>
+              <PropertyValue Property="Label" String="Items Carried"/>
+            </Record>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="events/@UI.LineItem"/>
+              <PropertyValue Property="Label" String="Event History"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.FieldGroup" Qualifier="RequestDetails">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="passNo"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="host_ID"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="plant_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="area_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="purpose_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="purposeDetail"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitDate"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="validFrom"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="validTo"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="inductionRef"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="inductionValidTill"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.FieldGroup" Qualifier="VisitorDetails">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitorName"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitorCompany"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitorMobile"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="idProofType_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="idProofNumber"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="vehicleNo"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionFields" Qualifier="GateConsole">
+          <Collection>
+            <PropertyPath>passNo</PropertyPath>
+            <PropertyPath>visitDate</PropertyPath>
+            <PropertyPath>status_code</PropertyPath>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="ExpectedToday">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="Expected Today"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="APPROVED"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="validFrom"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#GateConsole</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="OnSiteGate">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="On Site Now"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="ON_SITE"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="actualInAt"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#GateConsole</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.LineItem" Qualifier="GateConsole">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="passNo"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitorName"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitorCompany"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="validFrom"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="validTo"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Low"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="badgeNo"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/Medium"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="status_code"/>
+              <PropertyValue Property="Criticality" Path="status/criticality"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+            </Record>
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="GatePassService.checkIn"/>
+              <PropertyValue Property="Label" String="Check In"/>
+              <PropertyValue Property="Inline" Bool="true"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+              <Annotation Term="UI.Hidden">
+                <Ne>
+                  <Path>status_code</Path>
+                  <String>APPROVED</String>
+                </Ne>
+              </Annotation>
+            </Record>
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="GatePassService.checkOut"/>
+              <PropertyValue Property="Label" String="Check Out"/>
+              <PropertyValue Property="Inline" Bool="true"/>
+              <Annotation Term="UI.Importance" EnumMember="UI.ImportanceType/High"/>
+              <Annotation Term="UI.Hidden">
+                <Ne>
+                  <Path>status_code</Path>
+                  <String>ON_SITE</String>
+                </Ne>
+              </Annotation>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.HeaderFacets" Qualifier="GateConsole">
+          <Collection>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Status"/>
+            </Record>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#BadgeNo"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.DataPoint" Qualifier="BadgeNo">
+          <Record Type="UI.DataPointType">
+            <PropertyValue Property="Value" Path="badgeNo"/>
+            <PropertyValue Property="Title" String="Badge Number"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.Facets" Qualifier="GateConsole">
+          <Collection>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#IdentityCheck"/>
+              <PropertyValue Property="Label" String="Identity Check"/>
+            </Record>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="items/@UI.LineItem"/>
+              <PropertyValue Property="Label" String="Items Carried"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.FieldGroup" Qualifier="IdentityCheck">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitorName"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitorCompany"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="idProofType_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="idProofNumber"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="vehicleNo"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.HeaderInfo">
+          <Record Type="UI.HeaderInfoType">
+            <PropertyValue Property="TypeName" String="Visitor Pass"/>
+            <PropertyValue Property="TypeNamePlural" String="Visitor Passes"/>
+            <PropertyValue Property="Title">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="passNo"/>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="Description">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="visitorName"/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionFields">
+          <Collection>
+            <PropertyPath>passNo</PropertyPath>
+            <PropertyPath>status_code</PropertyPath>
+            <PropertyPath>visitDate</PropertyPath>
+            <PropertyPath>visitorName</PropertyPath>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="passNo"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitorName"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitorCompany"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitDate"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="validFrom"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="status_code"/>
+              <PropertyValue Property="Criticality" Path="status/criticality"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.Identification">
+          <Collection>
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="GatePassService.submit"/>
+              <PropertyValue Property="Label" String="Submit"/>
+              <Annotation Term="UI.Hidden">
+                <Ne>
+                  <Path>status_code</Path>
+                  <String>DRAFT</String>
+                </Ne>
+              </Annotation>
+            </Record>
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="GatePassService.cancel"/>
+              <PropertyValue Property="Label" String="Cancel Pass"/>
+              <Annotation Term="UI.Hidden">
+                <Not>
+                  <In>
+                    <Path>status_code</Path>
+                    <Collection>
+                      <String>DRAFT</String>
+                      <String>REQUESTED</String>
+                      <String>APPROVED</String>
+                    </Collection>
+                  </In>
+                </Not>
+              </Annotation>
+            </Record>
+            <Record Type="UI.DataFieldForAction">
+              <PropertyValue Property="Action" String="GatePassService.copy"/>
+              <PropertyValue Property="Label" String="Copy"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.HeaderFacets">
+          <Collection>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#Status"/>
+            </Record>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.DataPoint#VisitDate"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.DataPoint" Qualifier="Status">
+          <Record Type="UI.DataPointType">
+            <PropertyValue Property="Value" Path="status_code"/>
+            <PropertyValue Property="Title" String="Status"/>
+            <PropertyValue Property="Criticality" Path="status/criticality"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.DataPoint" Qualifier="VisitDate">
+          <Record Type="UI.DataPointType">
+            <PropertyValue Property="Value" Path="visitDate"/>
+            <PropertyValue Property="Title" String="Visit Date"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.Facets">
+          <Collection>
+            <Record Type="UI.CollectionFacet">
+              <PropertyValue Property="ID" String="VisitDetailsCollection"/>
+              <PropertyValue Property="Label" String="Visit"/>
+              <PropertyValue Property="Facets">
+                <Collection>
+                  <Record Type="UI.ReferenceFacet">
+                    <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#VisitInfo"/>
+                    <PropertyValue Property="Label" String="General"/>
+                  </Record>
+                  <Record Type="UI.ReferenceFacet">
+                    <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#IdentityInfo"/>
+                    <PropertyValue Property="Label" String="Visitor Identity"/>
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="items/@UI.LineItem"/>
+              <PropertyValue Property="Label" String="Items Carried"/>
+            </Record>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#GateLog"/>
+              <PropertyValue Property="Label" String="Gate Log"/>
+            </Record>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="events/@UI.LineItem"/>
+              <PropertyValue Property="Label" String="Event History"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.FieldGroup" Qualifier="VisitInfo">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="plant_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="area_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="purpose_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="purposeDetail"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitDate"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="validFrom"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="validTo"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="inductionRef"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="inductionValidTill"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.FieldGroup" Qualifier="IdentityInfo">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitorName"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitorCompany"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="visitorMobile"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="idProofType_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="idProofNumber"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="vehicleNo"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.FieldGroup" Qualifier="GateLog">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="badgeNo"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="actualInAt"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="actualOutAt"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="durationMinutes"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="isOverstay"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="rejectionReason"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionFields" Qualifier="Reports">
+          <Collection>
+            <PropertyPath>plant_code</PropertyPath>
+            <PropertyPath>area_code</PropertyPath>
+            <PropertyPath>visitDate</PropertyPath>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.LineItem" Qualifier="OnSiteNow">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="plant_code"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="area_code"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitorName"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitorCompany"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="host_ID"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="badgeNo"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="actualInAt"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="durationMinutes"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="OnSiteNow">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="On Site Now"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="ON_SITE"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="plant_code"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="area_code"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="actualInAt"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#OnSiteNow</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.LineItem" Qualifier="Overstay">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="plant_code"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="area_code"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitorName"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="host_ID"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="badgeNo"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="validTo"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="actualInAt"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="isOverstay"/>
+              <PropertyValue Property="Criticality" EnumMember="UI.CriticalityType/Negative"/>
+              <PropertyValue Property="CriticalityRepresentation" EnumMember="UI.CriticalityRepresentationType/WithoutIcon"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="Overstay">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="Overstay"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="ON_SITE"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="isOverstay"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" Bool="true"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="actualInAt"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#Overstay</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Messages" Path="DraftMessages"/>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/VisitorPasses">
+        <Annotation Term="Capabilities.SearchRestrictions">
+          <Record Type="Capabilities.SearchRestrictionsType">
+            <PropertyValue Property="Searchable" Bool="true"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="PendingApproval">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="Awaiting My Approval"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="REQUESTED"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="createdAt"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#Approvals</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="ExpectedToday">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="Expected Today"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="APPROVED"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="validFrom"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#GateConsole</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="OnSiteGate">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="On Site Now"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="ON_SITE"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="actualInAt"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#GateConsole</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="OnSiteNow">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="On Site Now"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="ON_SITE"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="plant_code"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="area_code"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="actualInAt"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#OnSiteNow</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionPresentationVariant" Qualifier="Overstay">
+          <Record Type="UI.SelectionPresentationVariantType">
+            <PropertyValue Property="Text" String="Overstay"/>
+            <PropertyValue Property="SelectionVariant">
+              <Record Type="UI.SelectionVariantType">
+                <PropertyValue Property="SelectOptions">
+                  <Collection>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="status_code"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" String="ON_SITE"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                    <Record Type="UI.SelectOptionType">
+                      <PropertyValue Property="PropertyName" PropertyPath="isOverstay"/>
+                      <PropertyValue Property="Ranges">
+                        <Collection>
+                          <Record Type="UI.SelectionRangeType">
+                            <PropertyValue Property="Sign" EnumMember="UI.SelectionRangeSignType/I"/>
+                            <PropertyValue Property="Option" EnumMember="UI.SelectionRangeOptionType/EQ"/>
+                            <PropertyValue Property="Low" Bool="true"/>
+                          </Record>
+                        </Collection>
+                      </PropertyValue>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="PresentationVariant">
+              <Record Type="UI.PresentationVariantType">
+                <PropertyValue Property="SortOrder">
+                  <Collection>
+                    <Record Type="Common.SortOrderType">
+                      <PropertyValue Property="Property" PropertyPath="actualInAt"/>
+                      <PropertyValue Property="Descending" Bool="false"/>
+                    </Record>
+                  </Collection>
+                </PropertyValue>
+                <PropertyValue Property="Visualizations">
+                  <Collection>
+                    <AnnotationPath>@UI.LineItem#Overstay</AnnotationPath>
+                  </Collection>
+                </PropertyValue>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.DraftRoot">
+          <Record Type="Common.DraftRootType">
+            <PropertyValue Property="ActivationAction" String="GatePassService.draftActivate"/>
+            <PropertyValue Property="EditAction" String="GatePassService.draftEdit"/>
+            <PropertyValue Property="PreparationAction" String="GatePassService.draftPrepare"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/ID">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/passNo">
+        <Annotation Term="Common.Label" String="Pass Number"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/host">
+        <Annotation Term="Common.Label" String="Host"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/host_ID">
+        <Annotation Term="Common.Text" Path="host/name">
+          <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+        </Annotation>
+        <Annotation Term="Common.Label" String="Host"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/plant">
+        <Annotation Term="Common.Label" String="Plant"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/plant_code">
+        <Annotation Term="Common.ValueList">
+          <Record Type="Common.ValueListType">
+            <PropertyValue Property="CollectionPath" String="Plants"/>
+            <PropertyValue Property="Parameters">
+              <Collection>
+                <Record Type="Common.ValueListParameterInOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="plant_code"/>
+                  <PropertyValue Property="ValueListProperty" String="code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterDisplayOnly">
+                  <PropertyValue Property="ValueListProperty" String="name"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Label" String="Plant"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/area">
+        <Annotation Term="Common.Label" String="Visit Area"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/area_code">
+        <Annotation Term="Common.ValueList">
+          <Record Type="Common.ValueListType">
+            <PropertyValue Property="CollectionPath" String="VisitAreas"/>
+            <PropertyValue Property="Parameters">
+              <Collection>
+                <Record Type="Common.ValueListParameterInOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="area_code"/>
+                  <PropertyValue Property="ValueListProperty" String="code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterIn">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="plant_code"/>
+                  <PropertyValue Property="ValueListProperty" String="plant_code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="area_plant_code"/>
+                  <PropertyValue Property="ValueListProperty" String="plant_code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterDisplayOnly">
+                  <PropertyValue Property="ValueListProperty" String="name"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Label" String="Visit Area"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/area_plant_code">
+        <Annotation Term="Common.ValueList">
+          <Record Type="Common.ValueListType">
+            <PropertyValue Property="CollectionPath" String="VisitAreas"/>
+            <PropertyValue Property="Parameters">
+              <Collection>
+                <Record Type="Common.ValueListParameterInOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="area_code"/>
+                  <PropertyValue Property="ValueListProperty" String="code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterIn">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="plant_code"/>
+                  <PropertyValue Property="ValueListProperty" String="plant_code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="area_plant_code"/>
+                  <PropertyValue Property="ValueListProperty" String="plant_code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterDisplayOnly">
+                  <PropertyValue Property="ValueListProperty" String="name"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Label" String="Visit Area"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/purpose">
+        <Annotation Term="Common.Label" String="Purpose"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/purpose_code">
+        <Annotation Term="Common.ValueListWithFixedValues" Bool="true"/>
+        <Annotation Term="Common.ValueList">
+          <Record Type="Common.ValueListType">
+            <PropertyValue Property="CollectionPath" String="VisitPurposes"/>
+            <PropertyValue Property="Parameters">
+              <Collection>
+                <Record Type="Common.ValueListParameterInOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="purpose_code"/>
+                  <PropertyValue Property="ValueListProperty" String="code"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Label" String="Purpose"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/purposeDetail">
+        <Annotation Term="Common.Label" String="Purpose Detail"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/visitorName">
+        <Annotation Term="Common.Label" String="Visitor"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/visitorCompany">
+        <Annotation Term="Common.Label" String="Company"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/visitorMobile">
+        <Annotation Term="Common.Label" String="Mobile"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/idProofType">
+        <Annotation Term="Common.Label" String="ID Proof Type"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/idProofType_code">
+        <Annotation Term="Common.ValueListWithFixedValues" Bool="true"/>
+        <Annotation Term="Common.ValueList">
+          <Record Type="Common.ValueListType">
+            <PropertyValue Property="CollectionPath" String="IdProofTypes"/>
+            <PropertyValue Property="Parameters">
+              <Collection>
+                <Record Type="Common.ValueListParameterInOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="idProofType_code"/>
+                  <PropertyValue Property="ValueListProperty" String="code"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Label" String="ID Proof Type"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/idProofNumber">
+        <Annotation Term="Common.Label" String="ID Proof Number"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/visitDate">
+        <Annotation Term="Common.Label" String="Visit Date"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/validFrom">
+        <Annotation Term="Common.Label" String="Valid From"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/validTo">
+        <Annotation Term="Common.Label" String="Valid To"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/inductionRef">
+        <Annotation Term="Common.Label" String="Induction Reference"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/inductionValidTill">
+        <Annotation Term="Common.Label" String="Induction Valid Till"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/vehicleNo">
+        <Annotation Term="Common.Label" String="Vehicle Number"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/status">
+        <Annotation Term="Common.Label" String="Status"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/status_code">
+        <Annotation Term="Common.Label" String="Status"/>
+        <Annotation Term="Common.ValueList">
+          <Record Type="Common.ValueListType">
+            <PropertyValue Property="Label" String="Status"/>
+            <PropertyValue Property="CollectionPath" String="PassStatus"/>
+            <PropertyValue Property="Parameters">
+              <Collection>
+                <Record Type="Common.ValueListParameterInOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="status_code"/>
+                  <PropertyValue Property="ValueListProperty" String="code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterDisplayOnly">
+                  <PropertyValue Property="ValueListProperty" String="name"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/badgeNo">
+        <Annotation Term="Common.Label" String="Badge Number"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/actualInAt">
+        <Annotation Term="Common.Label" String="Time In"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/actualOutAt">
+        <Annotation Term="Common.Label" String="Time Out"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/durationMinutes">
+        <Annotation Term="Common.Label" String="Minutes Inside"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/isOverstay">
+        <Annotation Term="Common.Label" String="Overstay"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/rejectionReason">
+        <Annotation Term="Common.Label" String="Rejection Reason"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/ageingDays">
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/IsActiveEntity">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/HasActiveEntity">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/HasDraftEntity">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/DraftAdministrativeData">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorPasses/DraftMessages">
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.rejectPass(GatePassService.VisitorPasses)/reason">
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="GatePassService.checkIn(GatePassService.VisitorPasses)/badgeNo">
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees">
+        <Annotation Term="UI.HeaderInfo">
+          <Record Type="UI.HeaderInfoType">
+            <PropertyValue Property="TypeName" String="Employee"/>
+            <PropertyValue Property="TypeNamePlural" String="Employees"/>
+            <PropertyValue Property="Title">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="name"/>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="Description">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="empNo"/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionFields">
+          <Collection>
+            <PropertyPath>isActive</PropertyPath>
+            <PropertyPath>defaultPlant_code</PropertyPath>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="empNo"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="name"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="email"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="department"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="defaultPlant_code"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="isActive"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.Facets">
+          <Collection>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#General"/>
+              <PropertyValue Property="Label" String="General"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.FieldGroup" Qualifier="General">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="empNo"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="name"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="email"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="department"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="defaultPlant_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="isActive"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/Employees">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="true"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="true"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/ID">
+        <Annotation Term="Common.Text" Path="name">
+          <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+        </Annotation>
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/empNo">
+        <Annotation Term="Common.Label" String="Employee Number"/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/name">
+        <Annotation Term="Common.Label" String="Employee Name"/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/email">
+        <Annotation Term="Common.Label" String="Email"/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/department">
+        <Annotation Term="Common.Label" String="Department"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/defaultPlant">
+        <Annotation Term="Common.Label" String="Default Plant"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/defaultPlant_code">
+        <Annotation Term="Common.ValueList">
+          <Record Type="Common.ValueListType">
+            <PropertyValue Property="CollectionPath" String="Plants"/>
+            <PropertyValue Property="Parameters">
+              <Collection>
+                <Record Type="Common.ValueListParameterInOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="defaultPlant_code"/>
+                  <PropertyValue Property="ValueListProperty" String="code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterDisplayOnly">
+                  <PropertyValue Property="ValueListProperty" String="name"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Label" String="Default Plant"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Employees/isActive">
+        <Annotation Term="Common.Label" String="Active"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants">
+        <Annotation Term="UI.HeaderInfo">
+          <Record Type="UI.HeaderInfoType">
+            <PropertyValue Property="TypeName" String="Plant"/>
+            <PropertyValue Property="TypeNamePlural" String="Plants"/>
+            <PropertyValue Property="Title">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="name"/>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="Description">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="code"/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionFields">
+          <Collection>
+            <PropertyPath>isActive</PropertyPath>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="code"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="name"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="city"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="gateOpenTime"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="gateCloseTime"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="isActive"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.Facets">
+          <Collection>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#General"/>
+              <PropertyValue Property="Label" String="General"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.FieldGroup" Qualifier="General">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="name"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="city"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="gateOpenTime"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="gateCloseTime"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="isActive"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/Plants">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="true"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="true"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/code">
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Common.Text" Path="name">
+          <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"/>
+        </Annotation>
+        <Annotation Term="Common.Label" String="Plant Code"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/name">
+        <Annotation Term="Common.Label" String="Plant Name"/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/city">
+        <Annotation Term="Common.Label" String="City"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/gateOpenTime">
+        <Annotation Term="Common.Label" String="Gate Open Time"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/gateCloseTime">
+        <Annotation Term="Common.Label" String="Gate Close Time"/>
+      </Annotations>
+      <Annotations Target="GatePassService.Plants/isActive">
+        <Annotation Term="Common.Label" String="Active"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas">
+        <Annotation Term="UI.HeaderInfo">
+          <Record Type="UI.HeaderInfoType">
+            <PropertyValue Property="TypeName" String="Visit Area"/>
+            <PropertyValue Property="TypeNamePlural" String="VisitAreas"/>
+            <PropertyValue Property="Title">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="name"/>
+              </Record>
+            </PropertyValue>
+            <PropertyValue Property="Description">
+              <Record Type="UI.DataField">
+                <PropertyValue Property="Value" Path="code"/>
+              </Record>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="UI.SelectionFields">
+          <Collection>
+            <PropertyPath>plant_code</PropertyPath>
+            <PropertyPath>isActive</PropertyPath>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="plant_code"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="code"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="name"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="requiresApproval"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="requiresInduction"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="maxVisitorsOnSite"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="isActive"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.Facets">
+          <Collection>
+            <Record Type="UI.ReferenceFacet">
+              <PropertyValue Property="Target" AnnotationPath="@UI.FieldGroup#General"/>
+              <PropertyValue Property="Label" String="General"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.FieldGroup" Qualifier="General">
+          <Record Type="UI.FieldGroupType">
+            <PropertyValue Property="Data">
+              <Collection>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="plant_code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="code"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="name"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="requiresApproval"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="requiresInduction"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="maxVisitorsOnSite"/>
+                </Record>
+                <Record Type="UI.DataField">
+                  <PropertyValue Property="Value" Path="isActive"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/VisitAreas">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="true"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="true"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/code">
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Common.Text" Path="name">
+          <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextFirst"/>
+        </Annotation>
+        <Annotation Term="Common.Label" String="Area Code"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/plant">
+        <Annotation Term="Common.Label" String="Plant"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/plant_code">
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Common.ValueList">
+          <Record Type="Common.ValueListType">
+            <PropertyValue Property="CollectionPath" String="Plants"/>
+            <PropertyValue Property="Parameters">
+              <Collection>
+                <Record Type="Common.ValueListParameterInOut">
+                  <PropertyValue Property="LocalDataProperty" PropertyPath="plant_code"/>
+                  <PropertyValue Property="ValueListProperty" String="code"/>
+                </Record>
+                <Record Type="Common.ValueListParameterDisplayOnly">
+                  <PropertyValue Property="ValueListProperty" String="name"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Label" String="Plant"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/name">
+        <Annotation Term="Common.Label" String="Area Name"/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/requiresApproval">
+        <Annotation Term="Common.Label" String="Requires Approval"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/requiresInduction">
+        <Annotation Term="Common.Label" String="Requires Induction"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/maxVisitorsOnSite">
+        <Annotation Term="Common.Label" String="Max Visitors On Site"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitAreas/isActive">
+        <Annotation Term="Common.Label" String="Active"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitPurposes">
+        <Annotation Term="UI.Identification">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="name"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/VisitPurposes">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitPurposes/name">
+        <Annotation Term="Common.Label" String="Name"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitPurposes/descr">
+        <Annotation Term="Common.Label" String="Description"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitPurposes/code">
+        <Annotation Term="Common.Text" Path="name">
+          <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.IdProofTypes">
+        <Annotation Term="UI.Identification">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="name"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/IdProofTypes">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.IdProofTypes/name">
+        <Annotation Term="Common.Label" String="Name"/>
+      </Annotations>
+      <Annotations Target="GatePassService.IdProofTypes/descr">
+        <Annotation Term="Common.Label" String="Description"/>
+      </Annotations>
+      <Annotations Target="GatePassService.IdProofTypes/code">
+        <Annotation Term="Common.Text" Path="name">
+          <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.PassStatus">
+        <Annotation Term="UI.Identification">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="name"/>
+            </Record>
+          </Collection>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/PassStatus">
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.PassStatus/name">
+        <Annotation Term="Common.Label" String="Name"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassStatus/descr">
+        <Annotation Term="Common.Label" String="Description"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassStatus/code">
+        <Annotation Term="Common.Text" Path="name">
+          <Annotation Term="UI.TextArrangement" EnumMember="UI.TextArrangementType/TextOnly"/>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems">
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="itemNo"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="description"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="serialNo"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="quantity"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="isReturnable"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="returnedAtExit"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="exitRemark"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Messages" Path="DraftMessages"/>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/PassItems">
+        <Annotation Term="Common.DraftNode">
+          <Record Type="Common.DraftNodeType">
+            <PropertyValue Property="PreparationAction" String="GatePassService.draftPrepare"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/ID">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/createdAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Created On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/createdBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Immutable" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Created By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/modifiedAt">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Changed On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/modifiedBy">
+        <Annotation Term="UI.HiddenFilter" Bool="true"/>
+        <Annotation Term="UI.ExcludeFromNavigationContext" Bool="true"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Core.Description" String="User's unique ID"/>
+        <Annotation Term="Common.Label" String="Changed By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/pass">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/pass_ID">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/itemNo">
+        <Annotation Term="Common.Label" String="Item"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/description">
+        <Annotation Term="Common.Label" String="Description"/>
+        <Annotation Term="Common.FieldControl" EnumMember="Common.FieldControlType/Mandatory"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/serialNo">
+        <Annotation Term="Common.Label" String="Serial Number"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/quantity">
+        <Annotation Term="Common.Label" String="Quantity"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/isReturnable">
+        <Annotation Term="Common.Label" String="Returnable"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/returnedAtExit">
+        <Annotation Term="Common.Label" String="Returned"/>
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/exitRemark">
+        <Annotation Term="Common.Label" String="Exit Remark"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/IsActiveEntity">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/HasActiveEntity">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/HasDraftEntity">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/DraftAdministrativeData">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassItems/DraftMessages">
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents">
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="actedAt"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="action"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="actor"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="fromStatus"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="toStatus"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="remark"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.PresentationVariant">
+          <Record Type="UI.PresentationVariantType">
+            <PropertyValue Property="SortOrder">
+              <Collection>
+                <Record Type="Common.SortOrderType">
+                  <PropertyValue Property="Property" PropertyPath="seq"/>
+                  <PropertyValue Property="Descending" Bool="false"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.Messages" Path="DraftMessages"/>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/PassEvents">
+        <Annotation Term="UI.PresentationVariant">
+          <Record Type="UI.PresentationVariantType">
+            <PropertyValue Property="SortOrder">
+              <Collection>
+                <Record Type="Common.SortOrderType">
+                  <PropertyValue Property="Property" PropertyPath="seq"/>
+                  <PropertyValue Property="Descending" Bool="false"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.DraftNode">
+          <Record Type="Common.DraftNodeType">
+            <PropertyValue Property="PreparationAction" String="GatePassService.draftPrepare"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Common.SideEffects" Qualifier="alwaysFetchMessages">
+          <Record Type="Common.SideEffectsType">
+            <PropertyValue Property="SourceEntities">
+              <Collection>
+                <NavigationPropertyPath></NavigationPropertyPath>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="TargetProperties">
+              <Collection>
+                <String>DraftMessages</String>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/ID">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/pass">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/pass_ID">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/seq">
+        <Annotation Term="Common.Label" String="Seq"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/fromStatus">
+        <Annotation Term="Common.Label" String="From"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/toStatus">
+        <Annotation Term="Common.Label" String="To"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/action">
+        <Annotation Term="Common.Label" String="Action"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/actor">
+        <Annotation Term="Common.Label" String="Actor"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/actedAt">
+        <Annotation Term="Common.Label" String="When"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/remark">
+        <Annotation Term="Common.Label" String="Remark"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/IsActiveEntity">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/HasActiveEntity">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/HasDraftEntity">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/DraftAdministrativeData">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassEvents/DraftMessages">
+        <Annotation Term="Core.Computed" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorFootfall">
+        <Annotation Term="UI.SelectionFields">
+          <Collection>
+            <PropertyPath>plant</PropertyPath>
+            <PropertyPath>area</PropertyPath>
+            <PropertyPath>purpose</PropertyPath>
+            <PropertyPath>visitYear</PropertyPath>
+            <PropertyPath>visitMonth</PropertyPath>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.LineItem">
+          <Collection>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitYear"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="visitMonth"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="plant"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="area"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="purpose"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="passCount"/>
+            </Record>
+            <Record Type="UI.DataField">
+              <PropertyValue Property="Value" Path="avgDuration"/>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term="UI.PresentationVariant">
+          <Record Type="UI.PresentationVariantType">
+            <PropertyValue Property="SortOrder">
+              <Collection>
+                <Record Type="Common.SortOrderType">
+                  <PropertyValue Property="Property" PropertyPath="visitYear"/>
+                  <PropertyValue Property="Descending" Bool="true"/>
+                </Record>
+                <Record Type="Common.SortOrderType">
+                  <PropertyValue Property="Property" PropertyPath="visitMonth"/>
+                  <PropertyValue Property="Descending" Bool="true"/>
+                </Record>
+                <Record Type="Common.SortOrderType">
+                  <PropertyValue Property="Property" PropertyPath="plant"/>
+                  <PropertyValue Property="Descending" Bool="false"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="Visualizations">
+              <Collection>
+                <AnnotationPath>@UI.LineItem</AnnotationPath>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.EntityContainer/VisitorFootfall">
+        <Annotation Term="UI.PresentationVariant">
+          <Record Type="UI.PresentationVariantType">
+            <PropertyValue Property="SortOrder">
+              <Collection>
+                <Record Type="Common.SortOrderType">
+                  <PropertyValue Property="Property" PropertyPath="visitYear"/>
+                  <PropertyValue Property="Descending" Bool="true"/>
+                </Record>
+                <Record Type="Common.SortOrderType">
+                  <PropertyValue Property="Property" PropertyPath="visitMonth"/>
+                  <PropertyValue Property="Descending" Bool="true"/>
+                </Record>
+                <Record Type="Common.SortOrderType">
+                  <PropertyValue Property="Property" PropertyPath="plant"/>
+                  <PropertyValue Property="Descending" Bool="false"/>
+                </Record>
+              </Collection>
+            </PropertyValue>
+            <PropertyValue Property="Visualizations">
+              <Collection>
+                <AnnotationPath>@UI.LineItem</AnnotationPath>
+              </Collection>
+            </PropertyValue>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.DeleteRestrictions">
+          <Record Type="Capabilities.DeleteRestrictionsType">
+            <PropertyValue Property="Deletable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.InsertRestrictions">
+          <Record Type="Capabilities.InsertRestrictionsType">
+            <PropertyValue Property="Insertable" Bool="false"/>
+          </Record>
+        </Annotation>
+        <Annotation Term="Capabilities.UpdateRestrictions">
+          <Record Type="Capabilities.UpdateRestrictionsType">
+            <PropertyValue Property="Updatable" Bool="false"/>
+          </Record>
+        </Annotation>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorFootfall/plant">
+        <Annotation Term="Common.Label" String="Plant"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorFootfall/area">
+        <Annotation Term="Common.Label" String="Visit Area"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorFootfall/purpose">
+        <Annotation Term="Common.Label" String="Purpose"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorFootfall/visitYear">
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Year"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorFootfall/visitMonth">
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Month"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorFootfall/passCount">
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Passes"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorFootfall/avgDuration">
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Average Minutes Inside"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitorFootfall/totalMinutes">
+        <Annotation Term="Core.Computed" Bool="true"/>
+        <Annotation Term="Common.Label" String="Total Minutes Inside"/>
+      </Annotations>
+      <Annotations Target="GatePassService.DraftAdministrativeData">
+        <Annotation Term="Common.Label" String="Draft Administrative Data"/>
+      </Annotations>
+      <Annotations Target="GatePassService.DraftAdministrativeData/DraftUUID">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+        <Annotation Term="Common.Label" String="Draft (Technical ID)"/>
+        <Annotation Term="Core.ComputedDefaultValue" Bool="true"/>
+      </Annotations>
+      <Annotations Target="GatePassService.DraftAdministrativeData/CreationDateTime">
+        <Annotation Term="Common.Label" String="Draft Created On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.DraftAdministrativeData/CreatedByUser">
+        <Annotation Term="Common.Label" String="Draft Created By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.DraftAdministrativeData/DraftIsCreatedByMe">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+        <Annotation Term="Common.Label" String="Draft Created By Me"/>
+      </Annotations>
+      <Annotations Target="GatePassService.DraftAdministrativeData/LastChangeDateTime">
+        <Annotation Term="Common.Label" String="Draft Last Changed On"/>
+      </Annotations>
+      <Annotations Target="GatePassService.DraftAdministrativeData/LastChangedByUser">
+        <Annotation Term="Common.Label" String="Draft Last Changed By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.DraftAdministrativeData/InProcessByUser">
+        <Annotation Term="Common.Label" String="Draft In Process By"/>
+      </Annotations>
+      <Annotations Target="GatePassService.DraftAdministrativeData/DraftIsProcessedByMe">
+        <Annotation Term="UI.Hidden" Bool="true"/>
+        <Annotation Term="Common.Label" String="Draft In Process By Me"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitPurposes_texts/locale">
+        <Annotation Term="Common.Label" String="Language Code"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitPurposes_texts/name">
+        <Annotation Term="Common.Label" String="Name"/>
+      </Annotations>
+      <Annotations Target="GatePassService.VisitPurposes_texts/descr">
+        <Annotation Term="Common.Label" String="Description"/>
+      </Annotations>
+      <Annotations Target="GatePassService.IdProofTypes_texts/locale">
+        <Annotation Term="Common.Label" String="Language Code"/>
+      </Annotations>
+      <Annotations Target="GatePassService.IdProofTypes_texts/name">
+        <Annotation Term="Common.Label" String="Name"/>
+      </Annotations>
+      <Annotations Target="GatePassService.IdProofTypes_texts/descr">
+        <Annotation Term="Common.Label" String="Description"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassStatus_texts/locale">
+        <Annotation Term="Common.Label" String="Language Code"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassStatus_texts/name">
+        <Annotation Term="Common.Label" String="Name"/>
+      </Annotations>
+      <Annotations Target="GatePassService.PassStatus_texts/descr">
+        <Annotation Term="Common.Label" String="Description"/>
+      </Annotations>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

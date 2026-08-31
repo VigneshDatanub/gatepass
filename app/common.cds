@@ -88,12 +88,18 @@ annotate GatePassService.VisitorPasses with {
         }
     });
 
+    // VisitAreas has a composite key (code + plant): the ValueListParameterIn
+    // below filters the dropdown to the pass's own plant, but filtering alone
+    // never writes area_plant_code back onto the pass — that needs its own
+    // Out parameter, or the association is left half-keyed after every pick
+    // and submit's area lookup (code + plant together) finds nothing.
     area @(Common: {
         ValueList: {
             CollectionPath: 'VisitAreas',
             Parameters: [
                 { $Type: 'Common.ValueListParameterInOut', LocalDataProperty: area_code, ValueListProperty: 'code' },
                 { $Type: 'Common.ValueListParameterIn', LocalDataProperty: plant_code, ValueListProperty: 'plant_code' },
+                { $Type: 'Common.ValueListParameterOut', LocalDataProperty: area_plant_code, ValueListProperty: 'plant_code' },
                 { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' }
             ]
         }
