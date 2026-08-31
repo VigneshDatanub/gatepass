@@ -69,7 +69,6 @@
           "options": {
             "settings": {
               "contextPath": "/VisitorPasses",
-              "annotationPath": "com.sap.vocabularies.UI.v1.LineItem#GateConsole",
               "navigation": {
                 "VisitorPasses": {
                   "detail": {
@@ -81,6 +80,18 @@
                 "@com.sap.vocabularies.UI.v1.SelectionFields": {
                   "annotationPath": "com.sap.vocabularies.UI.v1.SelectionFields#GateConsole"
                 }
+              },
+              "views": {
+                "paths": [
+                  {
+                    "key": "expectedToday",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#ExpectedToday"
+                  },
+                  {
+                    "key": "onSiteNow",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#OnSiteGate"
+                  }
+                ]
               }
             }
           }

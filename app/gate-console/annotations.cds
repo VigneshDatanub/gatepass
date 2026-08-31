@@ -10,6 +10,38 @@ annotate GatePassService.VisitorPasses with @(
         // ── List Report ──
         SelectionFields #GateConsole: [ passNo, visitDate, status_code ],
 
+        // Tab 1: APPROVED passes waiting to arrive.  Tab 2: everyone
+        // currently inside.  Section 10: "a guard with a queue does not
+        // pick a filter field first" — these are the two states the
+        // gate actually cares about; the free-text search below (bound
+        // via @cds.search in the .cds) covers "find this one visitor"
+        // inside either tab.
+        SelectionPresentationVariant #ExpectedToday: {
+            Text: '{i18n>ExpectedToday}',
+            SelectionVariant: {
+                SelectOptions: [
+                    { $Type: 'UI.SelectOptionType', PropertyName: status_code, Ranges: [ { Sign: #I, Option: #EQ, Low: 'APPROVED' } ] }
+                ]
+            },
+            PresentationVariant: {
+                SortOrder: [ { Property: validFrom, Descending: false } ],
+                Visualizations: [ '@UI.LineItem#GateConsole' ]
+            }
+        },
+
+        SelectionPresentationVariant #OnSiteGate: {
+            Text: '{i18n>OnSiteNow}',
+            SelectionVariant: {
+                SelectOptions: [
+                    { $Type: 'UI.SelectOptionType', PropertyName: status_code, Ranges: [ { Sign: #I, Option: #EQ, Low: 'ON_SITE' } ] }
+                ]
+            },
+            PresentationVariant: {
+                SortOrder: [ { Property: actualInAt, Descending: false } ],
+                Visualizations: [ '@UI.LineItem#GateConsole' ]
+            }
+        },
+
         LineItem #GateConsole: [
             { $Type: 'UI.DataField', Value: passNo },
             { $Type: 'UI.DataField', Value: visitorName },

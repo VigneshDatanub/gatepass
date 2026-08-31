@@ -57,6 +57,14 @@ modules:
           artifacts:
             - reports.zip
           target-path: app/
+        - name: gatepassapprovals
+          artifacts:
+            - approvals.zip
+          target-path: app/
+        - name: gatepassfootfall
+          artifacts:
+            - footfall.zip
+          target-path: app/
     requires:
       - name: gatepass-auth
       - name: srv-api
@@ -93,6 +101,26 @@ modules:
       builder: custom
       commands:
         - "node -e \"require('child_process').execSync('npx -y bestzip ../reports.zip *', {cwd: 'webapp'})\""
+      build-result: .
+      supported-platforms:
+        []
+  - name: gatepassapprovals
+    type: html5
+    path: app/approvals
+    build-parameters:
+      builder: custom
+      commands:
+        - "node -e \"require('child_process').execSync('npx -y bestzip ../approvals.zip *', {cwd: 'webapp'})\""
+      build-result: .
+      supported-platforms:
+        []
+  - name: gatepassfootfall
+    type: html5
+    path: app/footfall
+    build-parameters:
+      builder: custom
+      commands:
+        - "node -e \"require('child_process').execSync('npx -y bestzip ../footfall.zip *', {cwd: 'webapp'})\""
       build-result: .
       supported-platforms:
         []

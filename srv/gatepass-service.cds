@@ -1,60 +1,174 @@
 using nub.gatepass from '../db/schema';
 
+// ════════════════════════════════════════════════════════════════════
+//  ACTION PARAMETER TYPES
+// ════════════════════════════════════════════════════════════════════
+
+/**
+ * One item confirmation supplied by the guard at check-out (BR-09).
+ * Either returnedAtExit = true, or exitRemark explains why it is not
+ * leaving.  Anything else blocks the check-out.
+ */
+type ItemConfirmation {
+  ID             : UUID;
+  returnedAtExit : Boolean;
+  exitRemark     : String(100);
+}
+
 /**
  * GatePass Service — single OData V4 service.
  * Roles: Host, SecuritySupervisor, SecurityGuard, Admin (Section 3).
+ *
+ * Section 9 authorization is expressed here, on the service, so that it
+ * holds for every caller — Fiori, curl or test.  Nothing below relies on
+ * a button being hidden in the UI.
  */
 @requires: 'authenticated-user'
 service GatePassService {
 
   // ── Transactional ─────────────────────────────────────────────────
 
+  /**
+   * Section 9, row 1:
+   *   Host       C R U D  (own; U/D only in DRAFT — enforced in the handler)
+   *   Guard      R        (own plant, never other people's drafts)
+   *   Supervisor R        (own plant)
+   *   Admin      R        (all)
+   *
+   * The where clauses are what TC-09 tests: a second host opening the
+   * first host's pass by direct URL must get nothing back.
+   */
   @odata.draft.enabled
-  entity VisitorPasses as projection on gatepass.transaction.VisitorPasses actions {
+  @restrict: [
+    { grant: 'CREATE', to: 'Host' },
+    { grant: ['READ', 'UPDATE', 'DELETE'], to: 'Host', where: 'createdBy = $user' },
+    { grant: ['submit', 'cancel', 'copy'], to: 'Host', where: 'createdBy = $user' },
+
+    { grant: 'READ', to: 'SecurityGuard', where: 'plant.code = $user.plant' },
+    { grant: ['checkIn', 'checkOut'], to: 'SecurityGuard', where: 'plant.code = $user.plant' },
+
+    { grant: 'READ', to: 'SecuritySupervisor', where: 'plant.code = $user.plant' },
+    { grant: ['approve', 'rejectPass'], to: 'SecuritySupervisor', where: 'plant.code = $user.plant' },
+
+    { grant: 'READ', to: 'Admin' }
+  ]
+  entity VisitorPasses as projection on gatepass.transaction.VisitorPasses {
+    *,
+    /** Days since the pass was raised — the ageing column on S2. */
+    virtual null as ageingDays : Integer
+  } actions {
     /** Host submits: validates BR-01–BR-07, assigns passNo (BR-12), determines status (BR-04). */
-    action submit()                                returns VisitorPasses;
+    action submit()                                 returns VisitorPasses;
     /** Supervisor approves: checks BR-11 (not own pass). */
-    action approve()                               returns VisitorPasses;
+    action approve()                                returns VisitorPasses;
     /** Supervisor rejects: requires reason ≥ 10 chars (BR-10). */
-    action rejectPass(reason : String(200))        returns VisitorPasses;
-    /** Host cancels: only from DRAFT, REQUESTED, APPROVED. */
-    action cancel()                                returns VisitorPasses;
+    action rejectPass(reason : String(200) @mandatory) returns VisitorPasses;
+    /** Host cancels: only from DRAFT, REQUESTED, APPROVED. Never from ON_SITE. */
+    action cancel()                                 returns VisitorPasses;
     /** Guard checks in: BR-05 recheck, BR-06 window, BR-07 duplicate, BR-08 badge. */
-    action checkIn(badgeNo : String(10))           returns VisitorPasses;
-    /** Guard checks out: BR-09 returnable items, stamps departure, computes duration. */
-    action checkOut()                              returns VisitorPasses;
-    /** Copy to new DRAFT: visitor details + items carry over (BR-13). */
-    action copy()                                  returns VisitorPasses;
+    action checkIn(badgeNo : String(10) @mandatory) returns VisitorPasses;
+    /**
+     * Guard checks out (BR-09).  `items` carries the confirmations made at
+     * the gate; `remark` is recorded on the PassEvent when the guard forces
+     * the check-out with items outstanding (Section 6.3).
+     */
+    action checkOut(items : many ItemConfirmation, remark : String(200)) returns VisitorPasses;
+    /** Copy to a new DRAFT: visitor details + items carry over (BR-13). */
+    action copy()                                   returns VisitorPasses;
   };
 
-  // Composition children — auto-exposed but explicit for annotations
-  entity PassItems  as projection on gatepass.transaction.PassItems;
+  /**
+   * Section 9, row 2.  The guard's UPDATE is narrowed to the two exit
+   * fields inside the handler; the pass must be ON_SITE and at the
+   * guard's own plant.
+   */
+  @restrict: [
+    { grant: ['READ', 'CREATE', 'UPDATE', 'DELETE'], to: 'Host', where: 'pass.createdBy = $user' },
+    { grant: ['READ', 'UPDATE', 'confirmReturn'], to: 'SecurityGuard', where: 'pass.plant.code = $user.plant' },
+    { grant: 'READ', to: 'SecuritySupervisor', where: 'pass.plant.code = $user.plant' },
+    { grant: 'READ', to: 'Admin' }
+  ]
+  entity PassItems as projection on gatepass.transaction.PassItems actions {
+    /** Guard ticks one item back out at the gate (BR-09). */
+    action confirmReturn(returned : Boolean, exitRemark : String(100)) returns PassItems;
+  };
+
+  /**
+   * Section 6.3 / Section 9, row 3: readable by role, writable by nobody.
+   * @readonly stops CREATE, UPDATE and DELETE at the protocol layer; the
+   * handlers in the .js refuse them again so TC-10 passes even if this
+   * annotation is ever removed.
+   */
+  @readonly
+  @restrict: [
+    { grant: 'READ', to: 'Host', where: 'pass.createdBy = $user' },
+    { grant: 'READ', to: ['SecurityGuard', 'SecuritySupervisor'], where: 'pass.plant.code = $user.plant' },
+    { grant: 'READ', to: 'Admin' }
+  ]
   entity PassEvents as projection on gatepass.transaction.PassEvents;
 
-  // ── Master & Config (read-only for most, CRUD for Admin) ──────────
+  // ── Master & Config ───────────────────────────────────────────────
+  // Section 9, row 4: "C R U — deactivate, never hard delete".
+  // DELETE is granted to nobody, so isActive is the only way out.
 
   @restrict: [
-    { grant: '*', to: 'Admin' },
+    { grant: ['READ', 'CREATE', 'UPDATE'], to: 'Admin' },
     { grant: 'READ', to: ['Host', 'SecurityGuard', 'SecuritySupervisor'] }
   ]
-  entity Plants       as projection on gatepass.master.Plants;
+  entity Plants     as projection on gatepass.master.Plants;
 
   @restrict: [
-    { grant: '*', to: 'Admin' },
+    { grant: ['READ', 'CREATE', 'UPDATE'], to: 'Admin' },
     { grant: 'READ', to: ['Host', 'SecurityGuard', 'SecuritySupervisor'] }
   ]
-  entity Employees    as projection on gatepass.master.Employees;
+  entity Employees  as projection on gatepass.master.Employees;
 
   @restrict: [
-    { grant: '*', to: 'Admin' },
+    { grant: ['READ', 'CREATE', 'UPDATE'], to: 'Admin' },
     { grant: 'READ', to: ['Host', 'SecurityGuard', 'SecuritySupervisor'] }
   ]
-  entity VisitAreas   as projection on gatepass.master.VisitAreas;
+  entity VisitAreas as projection on gatepass.master.VisitAreas;
 
   // Code lists — read-only for everyone
-  @readonly entity VisitPurposes as projection on gatepass.config.VisitPurposes;
-  @readonly entity IdProofTypes  as projection on gatepass.config.IdProofTypes;
-  @readonly entity PassStatus    as projection on gatepass.config.PassStatus;
+  @readonly
+  entity VisitPurposes as projection on gatepass.config.VisitPurposes;
+
+  @readonly
+  entity IdProofTypes  as projection on gatepass.config.IdProofTypes;
+
+  @readonly
+  entity PassStatus    as projection on gatepass.config.PassStatus;
+
+  // ── R3: Visitor footfall ──────────────────────────────────────────
+
+  /**
+   * Section 10, R3 — count of passes and average duration by plant, area,
+   * purpose and month, over CHECKED_OUT passes only.  Aggregated in the
+   * database, not in the browser.
+   */
+  @readonly
+  @cds.redirection.target: false // associations to VisitorPasses must not land here
+  @restrict: [
+    { grant: 'READ', to: ['Admin', 'SecuritySupervisor'] }
+  ]
+  entity VisitorFootfall as
+    select from gatepass.transaction.VisitorPasses {
+      key plant.code                   as plant        : String(4),
+      key area.code                    as area         : String(20),
+      key purpose.code                 as purpose      : String(12),
+      key year(visitDate)              as visitYear    : Integer,
+      key month(visitDate)             as visitMonth   : Integer,
+          count(1)                     as passCount    : Integer,
+          avg(durationMinutes)         as avgDuration  : Decimal(10, 1),
+          sum(durationMinutes)         as totalMinutes : Integer
+    }
+    where status.code = 'CHECKED_OUT'
+    group by
+      plant.code,
+      area.code,
+      purpose.code,
+      year(visitDate),
+      month(visitDate);
 
   // ── Unbound action ────────────────────────────────────────────────
 
@@ -67,194 +181,24 @@ service GatePassService {
 }
 
 // ════════════════════════════════════════════════════════════════════
-//  UI ANNOTATIONS
+//  FREE-TEXT SEARCH
+//  Section 10: "a single search box must find a visitor by mobile
+//  number or by name.  A guard with a queue does not pick a filter
+//  field first."  This is what makes $search — and therefore the Fiori
+//  search field on the Gate Console — cover both.
 // ════════════════════════════════════════════════════════════════════
 
-// ── Value Helps (active rows only) ──────────────────────────────────
-
-annotate GatePassService.VisitorPasses with {
-  plant       @Common.ValueList: {
-    CollectionPath: 'Plants',
-    Parameters: [
-      { $Type: 'Common.ValueListParameterInOut',  LocalDataProperty: plant_code,  ValueListProperty: 'code' },
-      { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' },
-      { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'city' }
-    ]
-  };
-  area        @Common.ValueList: {
-    CollectionPath: 'VisitAreas',
-    Parameters: [
-      { $Type: 'Common.ValueListParameterInOut',  LocalDataProperty: area_code,  ValueListProperty: 'code' },
-      { $Type: 'Common.ValueListParameterIn',     LocalDataProperty: plant_code, ValueListProperty: 'plant_code' },
-      { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' }
-    ]
-  };
-  purpose     @Common.ValueList: {
-    CollectionPath: 'VisitPurposes',
-    Parameters: [
-      { $Type: 'Common.ValueListParameterInOut',  LocalDataProperty: purpose_code,  ValueListProperty: 'code' },
-      { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' }
-    ]
-  };
-  idProofType @Common.ValueList: {
-    CollectionPath: 'IdProofTypes',
-    Parameters: [
-      { $Type: 'Common.ValueListParameterInOut',  LocalDataProperty: idProofType_code,  ValueListProperty: 'code' },
-      { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' }
-    ]
-  };
-  host        @Common.ValueList: {
-    CollectionPath: 'Employees',
-    Parameters: [
-      { $Type: 'Common.ValueListParameterInOut',  LocalDataProperty: host_ID,  ValueListProperty: 'ID' },
-      { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' },
-      { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'empNo' }
-    ]
-  };
-  status      @Common.ValueList: {
-    CollectionPath: 'PassStatus',
-    Parameters: [
-      { $Type: 'Common.ValueListParameterInOut',  LocalDataProperty: status_code,  ValueListProperty: 'code' },
-      { $Type: 'Common.ValueListParameterDisplayOnly', ValueListProperty: 'name' }
-    ]
-  };
+annotate GatePassService.VisitorPasses with @cds.search: {
+  visitorName,
+  visitorMobile,
+  passNo,
+  visitorCompany,
+  badgeNo
 };
 
-// ── Field Labels ────────────────────────────────────────────────────
-
-annotate GatePassService.VisitorPasses with {
-  passNo             @title: 'Pass Number';
-  host               @title: 'Host';
-  plant              @title: 'Plant';
-  area               @title: 'Visit Area';
-  purpose            @title: 'Purpose';
-  purposeDetail      @title: 'Purpose Detail';
-  visitorName        @title: 'Visitor Name';
-  visitorCompany     @title: 'Visitor Company';
-  visitorMobile      @title: 'Visitor Mobile';
-  idProofType        @title: 'ID Proof Type';
-  idProofNumber      @title: 'ID Proof Number';
-  visitDate          @title: 'Visit Date';
-  validFrom          @title: 'Valid From';
-  validTo            @title: 'Valid To';
-  inductionRef       @title: 'Induction Reference';
-  inductionValidTill @title: 'Induction Valid Till';
-  vehicleNo          @title: 'Vehicle Number';
-  status             @title: 'Status';
-  badgeNo            @title: 'Badge Number';
-  actualInAt         @title: 'Arrival Time';
-  actualOutAt        @title: 'Departure Time';
-  durationMinutes    @title: 'Duration (min)';
-  isOverstay         @title: 'Overstay';
-  rejectionReason    @title: 'Rejection Reason';
-};
-
-annotate GatePassService.PassItems with {
-  itemNo         @title: 'Item No';
-  description    @title: 'Description';
-  serialNo       @title: 'Serial Number';
-  quantity       @title: 'Quantity';
-  isReturnable   @title: 'Returnable';
-  returnedAtExit @title: 'Returned';
-  exitRemark     @title: 'Exit Remark';
-};
-
-annotate GatePassService.PassEvents with {
-  seq        @title: 'Seq';
-  fromStatus @title: 'From';
-  toStatus   @title: 'To';
-  action     @title: 'Action';
-  actor      @title: 'Actor';
-  actedAt    @title: 'Acted At';
-  remark     @title: 'Remark';
-};
-
-// ── List Report Columns ─────────────────────────────────────────────
-
-annotate GatePassService.VisitorPasses with @UI: {
-  HeaderInfo: {
-    TypeName:       'Visitor Pass',
-    TypeNamePlural: 'Visitor Passes',
-    Title:          { Value: passNo },
-    Description:    { Value: visitorName }
-  },
-  SelectionFields: [ status_code, plant_code, visitDate, visitorName, visitorMobile ],
-  LineItem: [
-    { Value: passNo,         Label: 'Pass No' },
-    { Value: visitorName,    Label: 'Visitor' },
-    { Value: visitorCompany, Label: 'Company' },
-    { Value: plant_code,     Label: 'Plant' },
-    { Value: area_code,      Label: 'Area' },
-    { Value: visitDate,      Label: 'Visit Date' },
-    { Value: validFrom,      Label: 'From' },
-    { Value: validTo,        Label: 'To' },
-    { Value: status_code,    Label: 'Status', Criticality: status.criticality }
-  ],
-  Facets: [
-    { $Type: 'UI.ReferenceFacet', Target: '@UI.FieldGroup#Visit',    Label: 'Visit Details' },
-    { $Type: 'UI.ReferenceFacet', Target: '@UI.FieldGroup#Visitor',  Label: 'Visitor Details' },
-    { $Type: 'UI.ReferenceFacet', Target: '@UI.FieldGroup#Gate',     Label: 'Gate Details' },
-    { $Type: 'UI.ReferenceFacet', Target: 'items/@UI.LineItem',      Label: 'Items Carried' },
-    { $Type: 'UI.ReferenceFacet', Target: 'events/@UI.LineItem',     Label: 'Event History' }
-  ],
-  FieldGroup #Visit: {
-    Data: [
-      { Value: passNo },
-      { Value: host_ID },
-      { Value: plant_code },
-      { Value: area_code },
-      { Value: purpose_code },
-      { Value: purposeDetail },
-      { Value: visitDate },
-      { Value: validFrom },
-      { Value: validTo },
-      { Value: vehicleNo }
-    ]
-  },
-  FieldGroup #Visitor: {
-    Data: [
-      { Value: visitorName },
-      { Value: visitorCompany },
-      { Value: visitorMobile },
-      { Value: idProofType_code },
-      { Value: idProofNumber },
-      { Value: inductionRef },
-      { Value: inductionValidTill }
-    ]
-  },
-  FieldGroup #Gate: {
-    Data: [
-      { Value: status_code, Criticality: status.criticality },
-      { Value: badgeNo },
-      { Value: actualInAt },
-      { Value: actualOutAt },
-      { Value: durationMinutes },
-      { Value: isOverstay },
-      { Value: rejectionReason }
-    ]
-  }
-};
-
-annotate GatePassService.PassItems with @UI: {
-  LineItem: [
-    { Value: itemNo },
-    { Value: description },
-    { Value: serialNo },
-    { Value: quantity },
-    { Value: isReturnable },
-    { Value: returnedAtExit },
-    { Value: exitRemark }
-  ]
-};
-
-annotate GatePassService.PassEvents with @UI: {
-  LineItem: [
-    { Value: seq },
-    { Value: action },
-    { Value: fromStatus },
-    { Value: toStatus },
-    { Value: actor },
-    { Value: actedAt },
-    { Value: remark }
-  ]
+// @cds.search only wires the server-side $search handler; the
+// Capabilities annotation is what tells the Fiori Elements List Report
+// to render the search field in its toolbar in the first place.
+annotate GatePassService.VisitorPasses with @Capabilities.SearchRestrictions: {
+  Searchable: true
 };

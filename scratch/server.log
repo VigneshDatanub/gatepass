@@ -1,0 +1,47 @@
+[33m
+[1mcds serve all --with-mocks --in-memory? [0m
+[33m( live reload enabled for browsers ) [0m
+[33m
+[1m        ___________________________
+ [0m
+[cds] - loaded model from 10 file(s):
+ 
+  app\index.cds
+  app\reports\annotations.cds
+  app\my-passes\annotations.cds
+  app\gate-console\annotations.cds
+  app\footfall\annotations.cds
+  app\approvals\annotations.cds
+  app\common.cds
+  srv\gatepass-service.cds
+  db\schema.cds
+  node_modules\@sap\cds\common.cds
+
+[cds] - using bindings from: { registry: '~/.cds-services.json' }
+[cds] - connect to db > sqlite { url: ':memory:' }
+(node:22256) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  > init from db\data\nub.gatepass.transaction-VisitorPasses.csv 
+  > init from db\data\nub.gatepass.transaction-PassItems.csv 
+  > init from db\data\nub.gatepass.transaction-PassEvents.csv 
+  > init from db\data\nub.gatepass.master-VisitAreas.csv 
+  > init from db\data\nub.gatepass.master-Plants.csv 
+  > init from db\data\nub.gatepass.master-Employees.csv 
+  > init from db\data\nub.gatepass.config-VisitPurposes.csv 
+  > init from db\data\nub.gatepass.config-PassStatus.csv 
+  > init from db\data\nub.gatepass.config-IdProofTypes.csv 
+/> successfully deployed to in-memory database. 
+
+[cds] - using auth strategy {
+  kind: 'mocked',
+  impl: 'node_modules\\@sap\\cds\\lib\\srv\\middlewares\\auth\\basic-auth.js'
+}
+[cds] - serving GatePassService {
+  at: [ '/odata/v4/gate-pass' ],
+  decl: 'srv\\gatepass-service.cds:27',
+  impl: 'srv\\gatepass-service.js'
+}
+
+  [91m[1m[EADDRINUSE][0m - port 4004 is already in use by another server process.
+  > Press Return to restart with an arbitrary port.
+

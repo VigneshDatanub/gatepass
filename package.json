@@ -16,7 +16,7 @@
   "scripts": {
     "start": "cds-serve",
     "watch": "cds watch",
-    "test": "node --test test/"
+    "test": "node --test test/*.test.js"
   },
   "private": true,
   "cds": {

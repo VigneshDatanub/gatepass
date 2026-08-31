@@ -69,13 +69,29 @@
           "options": {
             "settings": {
               "contextPath": "/VisitorPasses",
-              "annotationPath": "com.sap.vocabularies.UI.v1.PresentationVariant#DailyFootfall",
               "navigation": {
                 "VisitorPasses": {
                   "detail": {
                     "route": "VisitorPassesObjectPage"
                   }
                 }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.SelectionFields": {
+                  "annotationPath": "com.sap.vocabularies.UI.v1.SelectionFields#Reports"
+                }
+              },
+              "views": {
+                "paths": [
+                  {
+                    "key": "onSiteNow",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#OnSiteNow"
+                  },
+                  {
+                    "key": "overstay",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#Overstay"
+                  }
+                ]
               }
             }
           }

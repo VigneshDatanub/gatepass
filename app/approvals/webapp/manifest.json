@@ -1,0 +1,131 @@
+{
+  "_version": "1.49.0",
+  "sap.app": {
+    "id": "nub.gatepass.approvals",
+    "type": "application",
+    "title": "Approval Worklist",
+    "dataSources": {
+      "mainService": {
+        "uri": "/odata/v4/gate-pass/",
+        "type": "OData",
+        "settings": {
+          "odataVersion": "4.0"
+        }
+      }
+    },
+    "applicationVersion": {
+      "version": "1.0.0"
+    },
+    "description": "Visitor Gate Pass &amp; On-Site Register — NubTech Industries",
+    "i18n": "i18n/i18n.properties"
+  },
+  "sap.ui": {
+    "technology": "UI5",
+    "deviceTypes": {
+      "desktop": true,
+      "tablet": true,
+      "phone": true
+    }
+  },
+  "sap.ui5": {
+    "dependencies": {
+      "minUI5Version": "1.108.0",
+      "libs": {
+        "sap.fe.templates": {}
+      }
+    },
+    "models": {
+      "": {
+        "dataSource": "mainService",
+        "settings": {
+          "synchronizationMode": "None",
+          "operationMode": "Server",
+          "autoExpandSelect": true,
+          "earlyRequests": true
+        }
+      },
+      "@i18n": {
+        "type": "sap.ui.model.resource.ResourceModel",
+        "uri": "i18n/i18n.properties"
+      }
+    },
+    "routing": {
+      "config": {
+        "routerClass": "sap.m.routing.Router"
+      },
+      "routes": [
+        {
+          "pattern": ":?query:",
+          "name": "VisitorPassesList",
+          "target": "VisitorPassesList"
+        },
+        {
+          "pattern": "VisitorPasses({VisitorPassesKey}):?query:",
+          "name": "VisitorPassesObjectPage",
+          "target": "VisitorPassesObjectPage"
+        }
+      ],
+      "targets": {
+        "VisitorPassesList": {
+          "type": "Component",
+          "id": "VisitorPassesList",
+          "name": "sap.fe.templates.ListReport",
+          "options": {
+            "settings": {
+              "contextPath": "/VisitorPasses",
+              "initialLoad": true,
+              "navigation": {
+                "VisitorPasses": {
+                  "detail": {
+                    "route": "VisitorPassesObjectPage"
+                  }
+                }
+              },
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.SelectionFields": {
+                  "annotationPath": "com.sap.vocabularies.UI.v1.SelectionFields#Approvals"
+                },
+                "@com.sap.vocabularies.UI.v1.LineItem#Approvals": {
+                  "tableSettings": {
+                    "type": "ResponsiveTable"
+                  }
+                }
+              },
+              "views": {
+                "paths": [
+                  {
+                    "key": "pendingApproval",
+                    "annotationPath": "com.sap.vocabularies.UI.v1.SelectionPresentationVariant#PendingApproval"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "VisitorPassesObjectPage": {
+          "type": "Component",
+          "id": "VisitorPassesObjectPage",
+          "name": "sap.fe.templates.ObjectPage",
+          "options": {
+            "settings": {
+              "contextPath": "/VisitorPasses",
+              "annotationPath": "com.sap.vocabularies.UI.v1.Facets#Approvals",
+              "controlConfiguration": {
+                "@com.sap.vocabularies.UI.v1.HeaderFacets": {
+                  "annotationPath": "com.sap.vocabularies.UI.v1.HeaderFacets#Approvals"
+                },
+                "@com.sap.vocabularies.UI.v1.Identification": {
+                  "annotationPath": "com.sap.vocabularies.UI.v1.Identification#Approvals"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "gatepass"
+  }
+}

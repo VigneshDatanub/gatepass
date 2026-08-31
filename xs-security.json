@@ -17,7 +17,13 @@
       "description": "SecuritySupervisor"
     }
   ],
-  "attributes": [],
+  "attributes": [
+    {
+      "name": "plant",
+      "description": "The plant code (1000/2000/3000/4000) this Guard or Supervisor works at. Section 9: a guard admits and a supervisor approves only at their own plant.",
+      "valueType": "string"
+    }
+  ],
   "role-templates": [
     {
       "name": "Admin",
@@ -37,19 +43,29 @@
     },
     {
       "name": "SecurityGuard",
-      "description": "generated",
+      "description": "generated. Assign the plant attribute when granting this role.",
       "scope-references": [
         "$XSAPPNAME.SecurityGuard"
       ],
-      "attribute-references": []
+      "attribute-references": [
+        {
+          "name": "plant",
+          "valueRequired": true
+        }
+      ]
     },
     {
       "name": "SecuritySupervisor",
-      "description": "generated",
+      "description": "generated. Assign the plant attribute when granting this role.",
       "scope-references": [
         "$XSAPPNAME.SecuritySupervisor"
       ],
-      "attribute-references": []
+      "attribute-references": [
+        {
+          "name": "plant",
+          "valueRequired": true
+        }
+      ]
     }
   ]
 }
