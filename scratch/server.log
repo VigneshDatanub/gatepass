@@ -1,0 +1,169 @@
+[33m
+[1mcds serve all --with-mocks --in-memory? --port 4004 [0m
+[33m( live reload enabled for browsers ) [0m
+[33m
+[1m        ___________________________
+ [0m
+[cds] - loaded model from 11 file(s):
+ 
+  app\index.cds
+  app\reports\annotations.cds
+  app\my-passes\annotations.cds
+  app\gate-console\annotations.cds
+  app\footfall\annotations.cds
+  app\approvals\annotations.cds
+  app\admin\annotations.cds
+  app\common.cds
+  srv\gatepass-service.cds
+  db\schema.cds
+  node_modules\@sap\cds\common.cds
+
+[cds] - using bindings from: { registry: '~/.cds-services.json' }
+[cds] - connect to db > sqlite { url: ':memory:' }
+(node:11640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  > init from db\data\nub.gatepass.transaction-VisitorPasses.csv 
+  > init from db\data\nub.gatepass.transaction-PassItems.csv 
+  > init from db\data\nub.gatepass.transaction-PassEvents.csv 
+  > init from db\data\nub.gatepass.master-VisitAreas.csv 
+  > init from db\data\nub.gatepass.master-Plants.csv 
+  > init from db\data\nub.gatepass.master-Employees.csv 
+  > init from db\data\nub.gatepass.config-VisitPurposes.csv 
+  > init from db\data\nub.gatepass.config-PassStatus.csv 
+  > init from db\data\nub.gatepass.config-IdProofTypes.csv 
+/> successfully deployed to in-memory database. 
+
+[cds] - using auth strategy {
+  kind: 'mocked',
+  impl: 'node_modules\\@sap\\cds\\lib\\srv\\middlewares\\auth\\basic-auth.js'
+}
+[cds] - serving GatePassService {
+  at: [ '/odata/v4/gate-pass' ],
+  decl: 'srv\\gatepass-service.cds:27',
+  impl: 'srv\\gatepass-service.js'
+}
+[cds] - server listening on { url: 'http://localhost:4004' }
+[cds] - server v10.0.6 launched in 1089 ms
+[odata] - GET /odata/v4/gate-pass/$metadata 
+[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
+[odata] - HEAD /odata/v4/gate-pass/ 
+[odata] - POST /odata/v4/gate-pass/$batch 
+[odata] - > GET /Plants(code='1000') {
+  '$select': 'DraftMessages,HasActiveEntity,HasDraftEntity,IsActiveEntity,city,code,gateCloseTime,gateOpenTime,isActive,name',
+  '$expand': 'DraftAdministrativeData($select=DraftIsCreatedByMe,DraftUUID,InProcessByUser)'
+}
+[odata] - POST /odata/v4/gate-pass/$batch 
+[odata] - > GET /Plants(code='1000') {
+  '$select': 'HasActiveEntity,HasDraftEntity,IsActiveEntity',
+  '$expand': 'DraftAdministrativeData($select=DraftIsCreatedByMe,DraftUUID,InProcessByUser)'
+}
+[odata] - HEAD /odata/v4/gate-pass/ 
+[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
+[odata] - POST /odata/v4/gate-pass/$batch 
+[odata] - > GET /Employees {
+  '$count': 'true',
+  '$select': 'HasActiveEntity,HasDraftEntity,ID,IsActiveEntity,defaultPlant_code,department,email,empNo,isActive,name',
+  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser)',
+  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
+  '$skip': '0',
+  '$top': '30'
+}
+[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
+[odata] - HEAD /odata/v4/gate-pass/ 
+[odata] - POST /odata/v4/gate-pass/$batch 
+[odata] - > GET /Plants {
+  '$count': 'true',
+  '$select': 'HasActiveEntity,HasDraftEntity,IsActiveEntity,city,code,gateCloseTime,gateOpenTime,isActive,name',
+  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser)',
+  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
+  '$skip': '0',
+  '$top': '30'
+}
+[odata] - HEAD /odata/v4/gate-pass/ 
+[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
+[odata] - POST /odata/v4/gate-pass/$batch 
+[odata] - > GET /Employees {
+  '$count': 'true',
+  '$select': 'HasActiveEntity,HasDraftEntity,ID,IsActiveEntity,defaultPlant_code,department,email,empNo,isActive,name',
+  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser)',
+  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
+  '$skip': '0',
+  '$top': '30'
+}
+[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
+[odata] - HEAD /odata/v4/gate-pass/ 
+[odata] - POST /odata/v4/gate-pass/$batch 
+[odata] - > GET /VisitAreas {
+  '$count': 'true',
+  '$select': 'HasActiveEntity,HasDraftEntity,IsActiveEntity,code,isActive,maxVisitorsOnSite,name,plant_code,requiresApproval,requiresInduction',
+  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser)',
+  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
+  '$skip': '0',
+  '$top': '30'
+}
+[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
+[odata] - HEAD /odata/v4/gate-pass/ 
+[odata] - POST /odata/v4/gate-pass/$batch 
+[odata] - > GET /VisitorFootfall {
+  '$count': 'true',
+  '$orderby': 'visitYear desc,visitMonth desc,plant',
+  '$select': 'area,avgDuration,passCount,plant,purpose,visitMonth,visitYear',
+  '$skip': '0',
+  '$top': '30'
+}
+[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
+[odata] - HEAD /odata/v4/gate-pass/ 
+[odata] - POST /odata/v4/gate-pass/$batch 
+[odata] - > GET /VisitorPasses {
+  '$count': 'true',
+  '$select': 'HasActiveEntity,HasDraftEntity,ID,IsActiveEntity,passNo,status_code,validFrom,visitDate,visitorCompany,visitorName',
+  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser),status($select=code,criticality)',
+  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
+  '$skip': '0',
+  '$top': '30'
+}
+[33m
+[1m        ___________________________
+ [0m
+[cds] - loaded model from 11 file(s):
+ 
+  app\index.cds
+  app\reports\annotations.cds
+  app\my-passes\annotations.cds
+  app\gate-console\annotations.cds
+  app\footfall\annotations.cds
+  app\approvals\annotations.cds
+  app\admin\annotations.cds
+  app\common.cds
+  srv\gatepass-service.cds
+  db\schema.cds
+  node_modules\@sap\cds\common.cds
+
+[cds] - using bindings from: { registry: '~/.cds-services.json' }
+[cds] - connect to db > sqlite { url: ':memory:' }
+(node:7388) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  > init from db\data\nub.gatepass.transaction-VisitorPasses.csv 
+  > init from db\data\nub.gatepass.transaction-PassItems.csv 
+  > init from db\data\nub.gatepass.transaction-PassEvents.csv 
+  > init from db\data\nub.gatepass.master-VisitAreas.csv 
+  > init from db\data\nub.gatepass.master-Plants.csv 
+  > init from db\data\nub.gatepass.master-Employees.csv 
+  > init from db\data\nub.gatepass.config-VisitPurposes.csv 
+  > init from db\data\nub.gatepass.config-PassStatus.csv 
+  > init from db\data\nub.gatepass.config-IdProofTypes.csv 
+/> successfully deployed to in-memory database. 
+
+[cds] - using auth strategy {
+  kind: 'mocked',
+  impl: 'node_modules\\@sap\\cds\\lib\\srv\\middlewares\\auth\\basic-auth.js'
+}
+[cds] - serving GatePassService {
+  at: [ '/odata/v4/gate-pass' ],
+  decl: 'srv\\gatepass-service.cds:27',
+  impl: 'srv\\gatepass-service.js'
+}
+
+  [91m[1m[EADDRINUSE][0m - port 4004 is already in use by another server process.
+  > Press Return to restart with an arbitrary port.
+
