@@ -20,7 +20,7 @@
 
 [cds] - using bindings from: { registry: '~/.cds-services.json' }
 [cds] - connect to db > sqlite { url: ':memory:' }
-(node:11640) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:14904) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
   > init from db\data\nub.gatepass.transaction-VisitorPasses.csv 
   > init from db\data\nub.gatepass.transaction-PassItems.csv 
@@ -43,85 +43,155 @@
   impl: 'srv\\gatepass-service.js'
 }
 [cds] - server listening on { url: 'http://localhost:4004' }
-[cds] - server v10.0.6 launched in 1089 ms
+[cds] - server v10.0.6 launched in 1107 ms
 [odata] - GET /odata/v4/gate-pass/$metadata 
-[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
-[odata] - HEAD /odata/v4/gate-pass/ 
-[odata] - POST /odata/v4/gate-pass/$batch 
-[odata] - > GET /Plants(code='1000') {
-  '$select': 'DraftMessages,HasActiveEntity,HasDraftEntity,IsActiveEntity,city,code,gateCloseTime,gateOpenTime,isActive,name',
-  '$expand': 'DraftAdministrativeData($select=DraftIsCreatedByMe,DraftUUID,InProcessByUser)'
+[odata] - GET /odata/v4/gate-pass/VisitorPasses(ID=10000000-0000-0000-0000-000000000001,IsActiveEntity=true) 
+[odata] - 404 - Error: Not Found
+    at C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\odata\middleware\read.js:261:19 {
+  status: 404,
+  code: '404',
+  _i18n: 1
 }
-[odata] - POST /odata/v4/gate-pass/$batch 
-[odata] - > GET /Plants(code='1000') {
-  '$select': 'HasActiveEntity,HasDraftEntity,IsActiveEntity',
-  '$expand': 'DraftAdministrativeData($select=DraftIsCreatedByMe,DraftUUID,InProcessByUser)'
+[odata] - GET /odata/v4/gate-pass/VisitorPasses(ID=10000000-0000-0000-0000-000000000001,IsActiveEntity=true) 
+[odata] - 404 - Error: Not Found
+    at C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\odata\middleware\read.js:261:19 {
+  status: 404,
+  code: '404',
+  _i18n: 1
 }
-[odata] - HEAD /odata/v4/gate-pass/ 
-[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
-[odata] - POST /odata/v4/gate-pass/$batch 
-[odata] - > GET /Employees {
-  '$count': 'true',
-  '$select': 'HasActiveEntity,HasDraftEntity,ID,IsActiveEntity,defaultPlant_code,department,email,empNo,isActive,name',
-  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser)',
-  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
-  '$skip': '0',
-  '$top': '30'
+[odata] - GET /odata/v4/gate-pass/VisitorPasses(ID=10000000-0000-0000-0000-000000000001,IsActiveEntity=true) 
+[odata] - PATCH /odata/v4/gate-pass/VisitorPasses(ID=10000000-0000-0000-0000-000000000001,IsActiveEntity=true) 
+[odata] - 403 - Error: A pass can only be changed while it is a draft. This one is APPROVED.
+    at fail (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:120:50)
+    at GatePassService.assertStillDraft (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:275:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async Promise.all (index 1)
+    at async GatePassService.handle (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:48:26)
+    at async GatePassService.draftHandle [as handle] (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\fiori\lean-draft.js:1194:5) {
+  status: 403,
+  code: 'PASS_READONLY',
+  args: [ 'APPROVED' ],
+  _i18n: 1
 }
-[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
-[odata] - HEAD /odata/v4/gate-pass/ 
-[odata] - POST /odata/v4/gate-pass/$batch 
-[odata] - > GET /Plants {
-  '$count': 'true',
-  '$select': 'HasActiveEntity,HasDraftEntity,IsActiveEntity,city,code,gateCloseTime,gateOpenTime,isActive,name',
-  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser)',
-  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
-  '$skip': '0',
-  '$top': '30'
+[odata] - PATCH /odata/v4/gate-pass/PassEvents(ID=30000000-0000-0000-0000-000000000001,IsActiveEntity=true) 
+[odata] - 422 - Error: A draft-enabled entity can only be modified via its root entity
+    at GatePassService.draftHandle [as handle] (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\fiori\lean-draft.js:1185:11)
+    at GatePassService.dispatch (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:32:17)
+    at C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:20:50
+    at GatePassService.run (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\cds.Service.js:171:44)
+    at GatePassService.dispatch (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:20:36)
+    at C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\odata\middleware\update.js:120:24
+    at C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-tx.js:27:48
+    at AsyncLocalStorage.run (node:internal/async_local_storage/async_hooks:91:14)
+    at cds._with (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\index.js:14:25)
+    at GatePassService.srv_tx [as tx] (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-tx.js:27:16) {
+  status: 422,
+  code: 'DRAFT_MODIFICATION_ONLY_VIA_ROOT',
+  _i18n: 1
 }
-[odata] - HEAD /odata/v4/gate-pass/ 
-[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
-[odata] - POST /odata/v4/gate-pass/$batch 
-[odata] - > GET /Employees {
-  '$count': 'true',
-  '$select': 'HasActiveEntity,HasDraftEntity,ID,IsActiveEntity,defaultPlant_code,department,email,empNo,isActive,name',
-  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser)',
-  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
-  '$skip': '0',
-  '$top': '30'
+[odata] - DELETE /odata/v4/gate-pass/PassEvents(ID=30000000-0000-0000-0000-000000000001,IsActiveEntity=true) 
+[odata] - 405 - Error: Entity "GatePassService.PassEvents" is read-only
+    at GatePassService.check_readonly (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\common\generic\auth\readOnly.js:10:61)
+    at GatePassService.handle_authorization (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\common\generic\auth\index.js:73:21)
+    at GatePassService.handle (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\common\Service.js:73:47)
+    at run (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\fiori\lean-draft.js:638:24)
+    at GatePassService.draftHandle [as handle] (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\fiori\lean-draft.js:912:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5) {
+  code: 'ENTITY_IS_READ_ONLY',
+  args: [ 'GatePassService.PassEvents' ],
+  status: 405,
+  _i18n: 1
 }
-[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
-[odata] - HEAD /odata/v4/gate-pass/ 
-[odata] - POST /odata/v4/gate-pass/$batch 
-[odata] - > GET /VisitAreas {
-  '$count': 'true',
-  '$select': 'HasActiveEntity,HasDraftEntity,IsActiveEntity,code,isActive,maxVisitorsOnSite,name,plant_code,requiresApproval,requiresInduction',
-  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser)',
-  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
-  '$skip': '0',
-  '$top': '30'
+[odata] - POST /odata/v4/gate-pass/VisitorPasses 
+[odata] - PATCH /odata/v4/gate-pass/VisitorPasses(ID=94cee164-243c-4747-9de6-7499e67d09fc,IsActiveEntity=false) 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses(ID=94cee164-243c-4747-9de6-7499e67d09fc,IsActiveEntity=false)/GatePassService.draftActivate 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses(ID=94cee164-243c-4747-9de6-7499e67d09fc,IsActiveEntity=true)/GatePassService.submit 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses 
+[odata] - PATCH /odata/v4/gate-pass/VisitorPasses(ID=16a19c52-6dae-46e7-8cea-d677332c85ec,IsActiveEntity=false) 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses(ID=16a19c52-6dae-46e7-8cea-d677332c85ec,IsActiveEntity=false)/GatePassService.draftActivate 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses(ID=16a19c52-6dae-46e7-8cea-d677332c85ec,IsActiveEntity=true)/GatePassService.submit 
+[odata] - 400 - [Error: Multiple errors occurred, see details below.] {
+  details: Errors(2) [
+    Error: Area Machine Shop & Assembly requires a valid safety induction.
+        at collect (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:116:11)
+        at err (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:338:42)
+        at GatePassService.<anonymous> (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:389:33)
+        at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at async next (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:57:19)
+        at async GatePassService.handle (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:55:12) {
+      status: 400,
+      code: 'BR05_INDUCTION_REQUIRED',
+      args: [ 'Machine Shop & Assembly' ],
+      target: 'in/inductionRef',
+      _i18n: 1
+    },
+    Error: Area Machine Shop & Assembly requires the date the safety induction expires.
+        at collect (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:116:11)
+        at err (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:338:42)
+        at GatePassService.<anonymous> (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:391:11)
+        at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+        at async next (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:57:19)
+        at async GatePassService.handle (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:55:12) {
+      status: 400,
+      code: 'BR05_INDUCTION_DATE_REQUIRED',
+      args: [ 'Machine Shop & Assembly' ],
+      target: 'in/inductionValidTill',
+      _i18n: 1
+    }
+  ],
+  status: 400,
+  code: 'MULTIPLE_ERRORS',
+  _i18n: 1
 }
-[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
-[odata] - HEAD /odata/v4/gate-pass/ 
-[odata] - POST /odata/v4/gate-pass/$batch 
-[odata] - > GET /VisitorFootfall {
-  '$count': 'true',
-  '$orderby': 'visitYear desc,visitMonth desc,plant',
-  '$select': 'area,avgDuration,passCount,plant,purpose,visitMonth,visitYear',
-  '$skip': '0',
-  '$top': '30'
+[odata] - GET /odata/v4/gate-pass/Plants 
+[odata] - POST /odata/v4/gate-pass/runDayEndJob 
+[odata] - POST /odata/v4/gate-pass/runDayEndJob 
+[odata] - 403 - Error: Forbidden
+    at reject (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\common\generic\auth\utils.js:10:19)
+    at GatePassService.check_auth_privileges (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\common\generic\auth\requires.js:37:3)
+    at GatePassService.handle_authorization (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\common\generic\auth\index.js:70:21)
+    at GatePassService.handle (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\common\Service.js:73:47)
+    at GatePassService.draftHandle [as handle] (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\_runtime\fiori\lean-draft.js:612:38)
+    at GatePassService.dispatch (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:32:17)
+    at C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:20:50
+    at GatePassService.run (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\cds.Service.js:171:44)
+    at GatePassService.dispatch (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:20:36)
+    at C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\libx\odata\middleware\operation.js:126:17 {
+  internal: null,
+  code: '403',
+  status: 403,
+  _i18n: 1
 }
-[odata] - GET /odata/v4/gate-pass/$metadata { 'sap-language': 'EN' }
-[odata] - HEAD /odata/v4/gate-pass/ 
-[odata] - POST /odata/v4/gate-pass/$batch 
-[odata] - > GET /VisitorPasses {
-  '$count': 'true',
-  '$select': 'HasActiveEntity,HasDraftEntity,ID,IsActiveEntity,passNo,status_code,validFrom,visitDate,visitorCompany,visitorName',
-  '$expand': 'DraftAdministrativeData($select=DraftUUID,InProcessByUser),status($select=code,criticality)',
-  '$filter': '(IsActiveEntity eq false or SiblingEntity/IsActiveEntity eq null)',
-  '$skip': '0',
-  '$top': '30'
+[odata] - POST /odata/v4/gate-pass/VisitorPasses 
+[odata] - PATCH /odata/v4/gate-pass/VisitorPasses(ID=8f5f3ad1-567e-4c2d-91f1-4f95e08a5a65,IsActiveEntity=false) 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses(ID=8f5f3ad1-567e-4c2d-91f1-4f95e08a5a65,IsActiveEntity=false)/GatePassService.draftActivate 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses(ID=8f5f3ad1-567e-4c2d-91f1-4f95e08a5a65,IsActiveEntity=true)/GatePassService.submit 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses(ID=8f5f3ad1-567e-4c2d-91f1-4f95e08a5a65,IsActiveEntity=true)/GatePassService.checkIn 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses(ID=8f5f3ad1-567e-4c2d-91f1-4f95e08a5a65,IsActiveEntity=true)/GatePassService.checkOut 
+[odata] - 400 - Error: 1 returnable item(s) not confirmed: Laptop. Confirm them, or record why they are not leaving.
+    at fail (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:120:50)
+    at GatePassService.<anonymous> (file:///C:/Users/D3010/Documents/Project_Gatepass/gatepass/srv/gatepass-service.js:607:16)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async next (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:57:19)
+    at async GatePassService.handle (C:\Users\D3010\Documents\Project_Gatepass\gatepass\node_modules\@sap\cds\lib\srv\srv-dispatch.js:55:12) {
+  status: 400,
+  code: 'BR09_ITEMS_UNCONFIRMED',
+  args: [ 1, 'Laptop' ],
+  _i18n: 1
 }
+[odata] - GET /odata/v4/gate-pass/VisitorPasses(ID=8f5f3ad1-567e-4c2d-91f1-4f95e08a5a65,IsActiveEntity=true)/items 
+[odata] - POST /odata/v4/gate-pass/VisitorPasses(ID=8f5f3ad1-567e-4c2d-91f1-4f95e08a5a65,IsActiveEntity=true)/GatePassService.checkOut 
+[odata] - GET /odata/v4/gate-pass/VisitorPasses {
+  '$filter': "status_code eq 'ON_SITE'",
+  '$select': 'passNo,visitorName,plant_code'
+}
+[odata] - GET /odata/v4/gate-pass/VisitorPasses { '$search': 'Sneha' }
+[odata] - GET /odata/v4/gate-pass/VisitorPasses { '$search': '9812345678' }
+[odata] - GET /odata/v4/gate-pass/VisitorFootfall 
+[odata] - GET /odata/v4/gate-pass/VisitorPasses(ID=10000000-0000-0000-0000-000000000001,IsActiveEntity=true) 
+[odata] - GET /odata/v4/gate-pass/VisitorPasses(ID=10000000-0000-0000-0000-000000000001,IsActiveEntity=true) 
+[odata] - POST /odata/v4/gate-pass/runDayEndJob 
+[odata] - POST /odata/v4/gate-pass/runDayEndJob 
 [33m
 [1m        ___________________________
  [0m
@@ -141,7 +211,7 @@
 
 [cds] - using bindings from: { registry: '~/.cds-services.json' }
 [cds] - connect to db > sqlite { url: ':memory:' }
-(node:7388) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(node:26448) ExperimentalWarning: SQLite is an experimental feature and might change at any time
 (Use `node --trace-warnings ...` to show where the warning was created)
   > init from db\data\nub.gatepass.transaction-VisitorPasses.csv 
   > init from db\data\nub.gatepass.transaction-PassItems.csv 
@@ -163,7 +233,48 @@
   decl: 'srv\\gatepass-service.cds:27',
   impl: 'srv\\gatepass-service.js'
 }
+[cds] - server listening on { url: 'http://localhost:4004' }
+[cds] - server v10.0.6 launched in 1149 ms
+[33m
+[1m        ___________________________
+ [0m
+[cds] - loaded model from 11 file(s):
+ 
+  app\index.cds
+  app\reports\annotations.cds
+  app\my-passes\annotations.cds
+  app\gate-console\annotations.cds
+  app\footfall\annotations.cds
+  app\approvals\annotations.cds
+  app\admin\annotations.cds
+  app\common.cds
+  srv\gatepass-service.cds
+  db\schema.cds
+  node_modules\@sap\cds\common.cds
 
-  [91m[1m[EADDRINUSE][0m - port 4004 is already in use by another server process.
-  > Press Return to restart with an arbitrary port.
+[cds] - using bindings from: { registry: '~/.cds-services.json' }
+[cds] - connect to db > sqlite { url: ':memory:' }
+(node:12956) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+  > init from db\data\nub.gatepass.transaction-VisitorPasses.csv 
+  > init from db\data\nub.gatepass.transaction-PassItems.csv 
+  > init from db\data\nub.gatepass.transaction-PassEvents.csv 
+  > init from db\data\nub.gatepass.master-VisitAreas.csv 
+  > init from db\data\nub.gatepass.master-Plants.csv 
+  > init from db\data\nub.gatepass.master-Employees.csv 
+  > init from db\data\nub.gatepass.config-VisitPurposes.csv 
+  > init from db\data\nub.gatepass.config-PassStatus.csv 
+  > init from db\data\nub.gatepass.config-IdProofTypes.csv 
+/> successfully deployed to in-memory database. 
 
+[cds] - using auth strategy {
+  kind: 'mocked',
+  impl: 'node_modules\\@sap\\cds\\lib\\srv\\middlewares\\auth\\basic-auth.js'
+}
+[cds] - serving GatePassService {
+  at: [ '/odata/v4/gate-pass' ],
+  decl: 'srv\\gatepass-service.cds:27',
+  impl: 'srv\\gatepass-service.js'
+}
+[cds] - server listening on { url: 'http://localhost:4004' }
+[cds] - server v10.0.6 launched in 1410 ms
