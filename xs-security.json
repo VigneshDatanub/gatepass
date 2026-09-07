@@ -21,7 +21,8 @@
     {
       "name": "plant",
       "description": "The plant code (1000/2000/3000/4000) this Guard or Supervisor works at. Section 9: a guard admits and a supervisor approves only at their own plant.",
-      "valueType": "string"
+      "valueType": "string",
+      "valueRequired": true
     }
   ],
   "role-templates": [
