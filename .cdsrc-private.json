@@ -1,0 +1,20 @@
+{
+  "requires": {
+    "[hybrid]": {
+      "db": {
+        "binding": {
+          "type": "cf",
+          "apiEndpoint": "https://api.cf.us10-003.hana.ondemand.com",
+          "org": "3c792fd9trial",
+          "space": "dev",
+          "instance": "shiva",
+          "key": "shiva-key"
+        },
+        "kind": "hana",
+        "vcap": {
+          "name": "db"
+        }
+      }
+    }
+  }
+}
