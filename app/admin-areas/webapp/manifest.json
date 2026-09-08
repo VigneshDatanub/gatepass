@@ -17,7 +17,22 @@
       "version": "1.0.0"
     },
     "description": "Visitor Gate Pass &amp; On-Site Register — NubTech Industries",
-    "i18n": "i18n/i18n.properties"
+    "i18n": "i18n/i18n.properties",
+    "crossNavigation": {
+      "inbounds": {
+        "gatepass-adminareas-display": {
+          "semanticObject": "GatePass",
+          "action": "adminAreas",
+          "title": "Admin Console — Visit Areas",
+          "subTitle": "Manage Visit Areas & Security Zones",
+          "icon": "sap-icon://functional-location",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
   },
   "sap.ui": {
     "technology": "UI5",

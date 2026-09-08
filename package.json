@@ -16,6 +16,7 @@
   "scripts": {
     "start": "cds-serve",
     "watch": "cds watch",
+    "build:apps": "node scratch/package_apps.js",
     "test": "node --test test/*.test.js"
   },
   "private": true,

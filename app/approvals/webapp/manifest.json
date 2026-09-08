@@ -17,7 +17,22 @@
       "version": "1.0.0"
     },
     "description": "Visitor Gate Pass &amp; On-Site Register — NubTech Industries",
-    "i18n": "i18n/i18n.properties"
+    "i18n": "i18n/i18n.properties",
+    "crossNavigation": {
+      "inbounds": {
+        "gatepass-approvals-display": {
+          "semanticObject": "GatePass",
+          "action": "approvals",
+          "title": "Approval Worklist",
+          "subTitle": "Host Approval for Visitor Passes",
+          "icon": "sap-icon://approvals",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
   },
   "sap.ui": {
     "technology": "UI5",
