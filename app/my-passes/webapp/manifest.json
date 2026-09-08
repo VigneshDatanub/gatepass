@@ -17,7 +17,22 @@
       "version": "1.0.0"
     },
     "description": "Visitor Gate Pass &amp; On-Site Register — NubTech Industries",
-    "i18n": "i18n/i18n.properties"
+    "i18n": "i18n/i18n.properties",
+    "crossNavigation": {
+      "inbounds": {
+        "gatepass-mypasses-display": {
+          "semanticObject": "GatePass",
+          "action": "myPasses",
+          "title": "My Passes",
+          "subTitle": "Visitor Gate Pass & On-Site Register",
+          "icon": "sap-icon://travel-request",
+          "signature": {
+            "parameters": {},
+            "additionalParameters": "allowed"
+          }
+        }
+      }
+    }
   },
   "sap.ui": {
     "technology": "UI5",
