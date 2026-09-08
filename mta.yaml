@@ -86,6 +86,37 @@ modules:
           config:
             HTML5Runtime_enabled: true
 
+  - name: gatepass-destination-content
+    type: com.sap.application.content
+    build-parameters:
+      no-source: true
+    requires:
+      - name: gatepass-destination
+        parameters:
+          content-target: true
+      - name: gatepass-html5-repo-host
+        parameters:
+          service-key:
+            name: gatepass-html5-repo-host-key
+      - name: gatepass-auth
+        parameters:
+          service-key:
+            name: gatepass-auth-key
+    parameters:
+      content:
+        subaccount:
+          existing_destinations_policy: update
+          destinations:
+            - Name: gatepass_html5_repo_host
+              ServiceInstanceName: gatepass-html5-repo-host
+              ServiceKeyName: gatepass-html5-repo-host-key
+              sap.cloud.service: gatepass
+            - Name: gatepass_auth
+              Authentication: OAuth2UserTokenExchange
+              ServiceInstanceName: gatepass-auth
+              ServiceKeyName: gatepass-auth-key
+              sap.cloud.service: gatepass
+
   - name: gatepassgateconsole
     type: html5
     path: app/gate-console
