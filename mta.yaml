@@ -115,7 +115,7 @@ modules:
               Authentication: OAuth2UserTokenExchange
               ServiceInstanceName: gatepass-auth
               ServiceKeyName: gatepass-auth-key
-              sap.cloud.service: gatepass
+              
 
   - name: gatepassgateconsole
     type: html5
@@ -279,6 +279,7 @@ resources:
                 URL: ~{srv-api/srv-url}
                 HTML5.DynamicDestination: true
                 HTML5.ForwardAuthToken: true
+                sap.cloud.service: gatepass
     requires:
       - name: srv-api
 
