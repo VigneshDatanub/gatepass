@@ -76,11 +76,15 @@ for (const app of apps) {
   
   let crossNavOk = false;
   let xsAppOk = false;
+  let sapCloudOk = false;
+  let uriOk = false;
 
   if (hasManifest) {
     const manifest = JSON.parse(entries['manifest.json']);
     const inbounds = manifest['sap.app']?.crossNavigation?.inbounds;
     crossNavOk = !!(inbounds && Object.keys(inbounds).length > 0);
+    sapCloudOk = manifest['sap.cloud']?.service === 'gatepass';
+    uriOk = manifest['sap.app']?.dataSources?.mainService?.uri === 'odata/v4/gate-pass/';
   }
 
   if (hasXsApp) {
@@ -88,8 +92,8 @@ for (const app of apps) {
     xsAppOk = xsApp.routes?.some(r => r.destination === 'srv-api');
   }
 
-  console.log(`[${app}] files: [${fileNames.join(', ')}] | crossNav: ${crossNavOk} | xsApp srv-api: ${xsAppOk}`);
-  if (!crossNavOk || !xsAppOk) allPassed = false;
+  console.log(`[${app}] files: [${fileNames.join(', ')}] | crossNav: ${crossNavOk} | sapCloud: ${sapCloudOk} | uriOk: ${uriOk} | xsApp srv-api: ${xsAppOk}`);
+  if (!crossNavOk || !xsAppOk || !sapCloudOk || !uriOk) allPassed = false;
 }
 
 if (allPassed) {

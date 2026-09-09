@@ -6,7 +6,7 @@
     "title": "Admin Console — Visit Areas",
     "dataSources": {
       "mainService": {
-        "uri": "/odata/v4/gate-pass/",
+        "uri": "odata/v4/gate-pass/",
         "type": "OData",
         "settings": {
           "odataVersion": "4.0"
@@ -33,6 +33,10 @@
         }
       }
     }
+  },
+  "sap.cloud": {
+    "public": true,
+    "service": "gatepass"
   },
   "sap.ui": {
     "technology": "UI5",
@@ -111,9 +115,5 @@
         }
       }
     }
-  },
-  "sap.cloud": {
-    "public": true,
-    "service": "gatepass"
   }
 }
