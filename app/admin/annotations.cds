@@ -63,6 +63,7 @@ annotate GatePassService.Plants with @(
 // ── Employees ────────────────────────────────────────────────────────
 
 annotate GatePassService.Employees with {
+    ID           @UI.Hidden @Core.Computed;
     empNo        @title: '{i18n>EmpNo}';
     name         @title: '{i18n>EmployeeName}';
     email        @title: '{i18n>Email}';

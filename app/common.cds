@@ -119,7 +119,7 @@ annotate GatePassService.VisitAreas with {
 };
 
 annotate GatePassService.Employees with {
-    ID @Common.Text: name @Common.TextArrangement: #TextOnly;
+    ID @UI.Hidden @Core.Computed @Common.Text: name @Common.TextArrangement: #TextOnly;
 };
 
 annotate GatePassService.VisitPurposes with {
