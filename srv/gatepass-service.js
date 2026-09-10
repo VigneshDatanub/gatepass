@@ -40,16 +40,30 @@ const SYSTEM_FIELDS = [
 // check-in window by the UTC offset, which in IST is 5½ hours.
 // Deploy with TZ set to the plant's timezone.
 
-/** 'YYYY-MM-DD' in server-local time. */
-const localDate = (d = new Date()) =>
-  `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const TIMEZONE = process.env.TZ || 'Asia/Kolkata';
 
-/** Minutes since local midnight. */
-const localMinutes = (d = new Date()) => d.getHours() * 60 + d.getMinutes();
+const formatParts = (d, options) => {
+  const parts = new Intl.DateTimeFormat('en-GB', { timeZone: TIMEZONE, hour12: false, ...options }).formatToParts(d);
+  return Object.fromEntries(parts.map(({ type, value }) => [type, value]));
+};
 
-/** 'HH:MM:SS' in server-local time. */
-const localTime = (d = new Date()) =>
-  `${String(d.getHours()).padStart(2, '0')}:${String(d.getMinutes()).padStart(2, '0')}:${String(d.getSeconds()).padStart(2, '0')}`;
+/** 'YYYY-MM-DD' in plant/server timezone. */
+const localDate = (d = new Date()) => {
+  const p = formatParts(d, { year: 'numeric', month: '2-digit', day: '2-digit' });
+  return `${p.year}-${p.month}-${p.day}`;
+};
+
+/** Minutes since midnight in plant/server timezone. */
+const localMinutes = (d = new Date()) => {
+  const p = formatParts(d, { hour: '2-digit', minute: '2-digit' });
+  return Number(p.hour) * 60 + Number(p.minute);
+};
+
+/** 'HH:MM:SS' in plant/server timezone. */
+const localTime = (d = new Date()) => {
+  const p = formatParts(d, { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  return `${p.hour}:${p.minute}:${p.second}`;
+};
 
 /** Convert 'HH:MM:SS' to minutes since midnight. */
 const timeToMinutes = (t) => {

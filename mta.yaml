@@ -18,6 +18,8 @@ modules:
     parameters:
       instances: 1
       buildpack: nodejs_buildpack
+    properties:
+      TZ: Asia/Kolkata
     build-parameters:
       builder: custom
       commands:
