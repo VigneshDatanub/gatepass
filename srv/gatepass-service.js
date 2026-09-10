@@ -432,6 +432,7 @@ export default class GatePassService extends cds.ApplicationService {
 
       await UPDATE(DBPasses(), ID).set({ status_code: target, passNo });
       await writeEvent(ID, 'DRAFT', target, 'SUBMIT', req);
+      req.notify({ message: 'PASS_SUBMITTED', args: [passNo] });
 
       return respond(ID, req);
     });
@@ -451,6 +452,7 @@ export default class GatePassService extends cds.ApplicationService {
 
       await UPDATE(DBPasses(), pass.ID).set({ status_code: 'APPROVED' });
       await writeEvent(pass.ID, 'REQUESTED', 'APPROVED', 'APPROVE', req);
+      req.notify({ message: 'PASS_APPROVED', args: [pass.passNo || ''] });
       return respond(pass.ID, req);
     });
 
@@ -473,6 +475,7 @@ export default class GatePassService extends cds.ApplicationService {
         rejectionReason: reason.trim()          // read-only forever after
       });
       await writeEvent(pass.ID, 'REQUESTED', 'REJECTED', 'REJECT', req, reason.trim());
+      req.notify({ message: 'PASS_REJECTED', args: [pass.passNo || ''] });
       return respond(pass.ID, req);
     });
 
@@ -489,6 +492,7 @@ export default class GatePassService extends cds.ApplicationService {
 
       await UPDATE(DBPasses(), pass.ID).set({ status_code: 'CANCELLED' });
       await writeEvent(pass.ID, pass.status_code, 'CANCELLED', 'CANCEL', req);
+      req.notify({ message: 'PASS_CANCELLED', args: [pass.passNo || ''] });
       return respond(pass.ID, req);
     });
 
@@ -555,6 +559,7 @@ export default class GatePassService extends cds.ApplicationService {
         actualInAt: new Date().toISOString()     // stamped by the server, never from a browser
       });
       await writeEvent(ID, 'APPROVED', 'ON_SITE', 'CHECK_IN', req);
+      req.notify({ message: 'CHECKIN_SUCCESS', args: [pass.visitorName, badgeNo] });
       return respond(ID, req);
     });
 
@@ -584,6 +589,7 @@ export default class GatePassService extends cds.ApplicationService {
       if (item.isReturnable && !returned && !exitRemark) return fail(req, 400, 'BR09_REMARK_REQUIRED');
 
       await UPDATE(DBItems(), ID).set({ returnedAtExit: returned, exitRemark });
+      req.notify({ message: 'ITEM_RETURN_CONFIRMED' });
       return SELECT.one.from(PassItems).where({ ID });
     });
 
@@ -643,6 +649,7 @@ export default class GatePassService extends cds.ApplicationService {
         badgeNo: null                 // BR-08: the badge is released at check-out
       });
       await writeEvent(ID, 'ON_SITE', 'CHECKED_OUT', 'CHECK_OUT', req, remark);
+      req.notify({ message: 'CHECKOUT_SUCCESS', args: [pass.visitorName] });
       return respond(ID, req);
     });
 

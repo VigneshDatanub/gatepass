@@ -160,13 +160,13 @@ annotate GatePassService.VisitorPasses with @(
 annotate GatePassService.PassItems with @(
     UI: {
         LineItem: [
-            { $Type: 'UI.DataField', Value: itemNo },
-            { $Type: 'UI.DataField', Value: description },
-            { $Type: 'UI.DataField', Value: serialNo },
-            { $Type: 'UI.DataField', Value: quantity },
-            { $Type: 'UI.DataField', Value: isReturnable },
-            { $Type: 'UI.DataField', Value: returnedAtExit },
-            { $Type: 'UI.DataField', Value: exitRemark },
+            { $Type: 'UI.DataField', Value: itemNo, ![@HTML5.CssDefaults]: { width: '5rem' } },
+            { $Type: 'UI.DataField', Value: description, ![@HTML5.CssDefaults]: { width: '14rem' } },
+            { $Type: 'UI.DataField', Value: serialNo, ![@HTML5.CssDefaults]: { width: '10rem' } },
+            { $Type: 'UI.DataField', Value: quantity, ![@HTML5.CssDefaults]: { width: '6rem' } },
+            { $Type: 'UI.DataField', Value: isReturnable, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: returnedAtExit, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: exitRemark, ![@HTML5.CssDefaults]: { width: '12rem' } },
             {
                 $Type: 'UI.DataFieldForAction',
                 Action: 'GatePassService.confirmReturn',
@@ -181,12 +181,12 @@ annotate GatePassService.PassItems with @(
 annotate GatePassService.PassEvents with @(
     UI: {
         LineItem: [
-            { $Type: 'UI.DataField', Value: actedAt },
-            { $Type: 'UI.DataField', Value: action },
-            { $Type: 'UI.DataField', Value: actor },
-            { $Type: 'UI.DataField', Value: fromStatus },
-            { $Type: 'UI.DataField', Value: toStatus },
-            { $Type: 'UI.DataField', Value: remark }
+            { $Type: 'UI.DataField', Value: actedAt, ![@HTML5.CssDefaults]: { width: '11rem' } },
+            { $Type: 'UI.DataField', Value: action, ![@HTML5.CssDefaults]: { width: '8rem' } },
+            { $Type: 'UI.DataField', Value: actor, ![@HTML5.CssDefaults]: { width: '10rem' } },
+            { $Type: 'UI.DataField', Value: fromStatus, ![@HTML5.CssDefaults]: { width: '8rem' } },
+            { $Type: 'UI.DataField', Value: toStatus, ![@HTML5.CssDefaults]: { width: '8rem' } },
+            { $Type: 'UI.DataField', Value: remark, ![@HTML5.CssDefaults]: { width: '14rem' } }
         ],
         PresentationVariant: {
             SortOrder: [ { Property: seq, Descending: false } ]

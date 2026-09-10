@@ -47,17 +47,18 @@ annotate GatePassService.VisitorPasses with @(
         // High so a guard on a smaller screen never loses the one button
         // they came here to press.
         LineItem #GateConsole: [
-            { $Type: 'UI.DataField', Value: passNo, ![@UI.Importance]: #High },
-            { $Type: 'UI.DataField', Value: visitorName, ![@UI.Importance]: #High },
-            { $Type: 'UI.DataField', Value: visitorCompany, ![@UI.Importance]: #Low },
-            { $Type: 'UI.DataField', Value: validFrom, ![@UI.Importance]: #Medium },
-            { $Type: 'UI.DataField', Value: validTo, ![@UI.Importance]: #Low },
-            { $Type: 'UI.DataField', Value: badgeNo, ![@UI.Importance]: #Medium },
+            { $Type: 'UI.DataField', Value: passNo, ![@UI.Importance]: #High, ![@HTML5.CssDefaults]: { width: '11rem' } },
+            { $Type: 'UI.DataField', Value: visitorName, ![@UI.Importance]: #High, ![@HTML5.CssDefaults]: { width: '12rem' } },
+            { $Type: 'UI.DataField', Value: visitorCompany, ![@UI.Importance]: #Low, ![@HTML5.CssDefaults]: { width: '12rem' } },
+            { $Type: 'UI.DataField', Value: validFrom, ![@UI.Importance]: #Medium, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: validTo, ![@UI.Importance]: #Low, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: badgeNo, ![@UI.Importance]: #Medium, ![@HTML5.CssDefaults]: { width: '7.5rem' } },
             {
                 $Type: 'UI.DataField',
                 Value: status_code,
                 Criticality: status.criticality,
-                ![@UI.Importance]: #High
+                ![@UI.Importance]: #High,
+                ![@HTML5.CssDefaults]: { width: '9.5rem' }
             },
             {
                 $Type: 'UI.DataFieldForAction',

@@ -20,14 +20,14 @@ annotate GatePassService.VisitorPasses with @(
         //    mobile, badge, time in, minutes inside.  This report is
         //    the business case." ──
         LineItem #OnSiteNow: [
-            { $Type: 'UI.DataField', Value: plant_code },
-            { $Type: 'UI.DataField', Value: area_code },
-            { $Type: 'UI.DataField', Value: visitorName },
-            { $Type: 'UI.DataField', Value: visitorCompany },
-            { $Type: 'UI.DataField', Value: host_ID },
-            { $Type: 'UI.DataField', Value: badgeNo },
-            { $Type: 'UI.DataField', Value: actualInAt },
-            { $Type: 'UI.DataField', Value: durationMinutes }
+            { $Type: 'UI.DataField', Value: plant_code, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: area_code, ![@HTML5.CssDefaults]: { width: '9rem' } },
+            { $Type: 'UI.DataField', Value: visitorName, ![@HTML5.CssDefaults]: { width: '12rem' } },
+            { $Type: 'UI.DataField', Value: visitorCompany, ![@HTML5.CssDefaults]: { width: '12rem' } },
+            { $Type: 'UI.DataField', Value: host_ID, ![@HTML5.CssDefaults]: { width: '10rem' } },
+            { $Type: 'UI.DataField', Value: badgeNo, ![@HTML5.CssDefaults]: { width: '7.5rem' } },
+            { $Type: 'UI.DataField', Value: actualInAt, ![@HTML5.CssDefaults]: { width: '11rem' } },
+            { $Type: 'UI.DataField', Value: durationMinutes, ![@HTML5.CssDefaults]: { width: '7.5rem' } }
         ],
         SelectionPresentationVariant #OnSiteNow: {
             Text: '{i18n>OnSiteNow}',
@@ -49,18 +49,19 @@ annotate GatePassService.VisitorPasses with @(
         // ── R2: Overstay — "ON_SITE passes past validTo, longest over
         //    first.  Also the output of the day-end job." ──
         LineItem #Overstay: [
-            { $Type: 'UI.DataField', Value: plant_code },
-            { $Type: 'UI.DataField', Value: area_code },
-            { $Type: 'UI.DataField', Value: visitorName },
-            { $Type: 'UI.DataField', Value: host_ID },
-            { $Type: 'UI.DataField', Value: badgeNo },
-            { $Type: 'UI.DataField', Value: validTo },
-            { $Type: 'UI.DataField', Value: actualInAt },
+            { $Type: 'UI.DataField', Value: plant_code, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: area_code, ![@HTML5.CssDefaults]: { width: '9rem' } },
+            { $Type: 'UI.DataField', Value: visitorName, ![@HTML5.CssDefaults]: { width: '12rem' } },
+            { $Type: 'UI.DataField', Value: host_ID, ![@HTML5.CssDefaults]: { width: '10rem' } },
+            { $Type: 'UI.DataField', Value: badgeNo, ![@HTML5.CssDefaults]: { width: '7.5rem' } },
+            { $Type: 'UI.DataField', Value: validTo, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: actualInAt, ![@HTML5.CssDefaults]: { width: '11rem' } },
             {
                 $Type: 'UI.DataField',
                 Value: isOverstay,
                 Criticality: #Negative,
-                CriticalityRepresentation: #WithoutIcon
+                CriticalityRepresentation: #WithoutIcon,
+                ![@HTML5.CssDefaults]: { width: '7.5rem' }
             }
         ],
         SelectionPresentationVariant #Overstay: {

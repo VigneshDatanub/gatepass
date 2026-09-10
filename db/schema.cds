@@ -101,20 +101,20 @@ context transaction {
     // ── Identification ──
     passNo             : String(20); // Sys: GP-<plant>-<YYYY>-<5 digits>, assigned at submit (BR-12)
     host               : Association to master.Employees; // Sys: always the logged-in user
-    plant              : Association to master.Plants; // Yes: defaults from the host's employee record
-    area               : Association to master.VisitAreas; // Yes: must be active and belong to the chosen plant
+    plant              : Association to master.Plants @mandatory; // Yes: defaults from the host's employee record
+    area               : Association to master.VisitAreas @mandatory; // Yes: must be active and belong to the chosen plant
 
     // ── Visit details ──
-    purpose            : Association to config.VisitPurposes; // Yes
+    purpose            : Association to config.VisitPurposes @mandatory; // Yes
     purposeDetail      : String(200); // Cond: mandatory when purpose = OTHER, min 15 chars
-    visitorName        : String(80); // Yes: min 3 chars
-    visitorCompany     : String(80); // Yes
-    visitorMobile      : String(10); // Yes: exactly 10 digits, first digit 6-9
-    idProofType        : Association to config.IdProofTypes; // Yes
-    idProofNumber      : String(20); // Yes: masked on read (BR-14)
-    visitDate          : Date; // Yes: not in the past (BR-01)
-    validFrom          : Time; // Yes: inside plant gate hours (BR-02)
-    validTo            : Time; // Yes: after validFrom, same day, max 12 h (BR-02)
+    visitorName        : String(80) @mandatory; // Yes: min 3 chars
+    visitorCompany     : String(80) @mandatory; // Yes
+    visitorMobile      : String(10) @mandatory; // Yes: exactly 10 digits, first digit 6-9
+    idProofType        : Association to config.IdProofTypes @mandatory; // Yes
+    idProofNumber      : String(20) @mandatory; // Yes: masked on read (BR-14)
+    visitDate          : Date @mandatory; // Yes: not in the past (BR-01)
+    validFrom          : Time @mandatory; // Yes: inside plant gate hours (BR-02)
+    validTo            : Time @mandatory; // Yes: after validFrom, same day, max 12 h (BR-02)
     inductionRef       : String(30); // Cond: when area.requiresInduction (BR-05)
     inductionValidTill : Date; // Cond: on or after visitDate (BR-05)
     vehicleNo          : String(15); // No: gate log only
@@ -144,8 +144,8 @@ context transaction {
     itemNo         : Integer; // Sys: line number 10, 20, 30 …
     description    : String(100) @mandatory; // Yes: min 3 chars
     serialNo       : String(40); // No: recommended for laptops
-    quantity       : Integer default 1; // Yes: 1-99
-    isReturnable   : Boolean default true; // Yes: false for a sample being handed over
+    quantity       : Integer default 1 @mandatory; // Yes: 1-99
+    isReturnable   : Boolean default true @mandatory; // Yes: false for a sample being handed over
     returnedAtExit : Boolean default false; // Sys: ticked by the guard at check-out (BR-09)
     exitRemark     : String(100); // Cond: mandatory when returnable item not confirmed
   }

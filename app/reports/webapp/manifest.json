@@ -88,6 +88,7 @@
           "options": {
             "settings": {
               "contextPath": "/VisitorPasses",
+              "initialLoad": "Enabled",
               "navigation": {
                 "VisitorPasses": {
                   "detail": {
@@ -98,6 +99,16 @@
               "controlConfiguration": {
                 "@com.sap.vocabularies.UI.v1.SelectionFields": {
                   "annotationPath": "com.sap.vocabularies.UI.v1.SelectionFields#Reports"
+                },
+                "@com.sap.vocabularies.UI.v1.LineItem#OnSiteNow": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
+                },
+                "@com.sap.vocabularies.UI.v1.LineItem#Overstay": {
+                  "tableSettings": {
+                    "type": "GridTable"
+                  }
                 }
               },
               "views": {

@@ -42,26 +42,28 @@ annotate GatePassService.VisitorPasses with @(
         // which reads exactly like "there is no Approve button" even
         // though the annotation and the action both work.
         LineItem #Approvals: [
-            { $Type: 'UI.DataField', Value: passNo, ![@UI.Importance]: #High },
-            { $Type: 'UI.DataField', Value: visitorName, ![@UI.Importance]: #High },
-            { $Type: 'UI.DataField', Value: visitorCompany, ![@UI.Importance]: #Low },
-            { $Type: 'UI.DataField', Value: area_code, ![@UI.Importance]: #Medium },
-            { $Type: 'UI.DataField', Value: visitDate, ![@UI.Importance]: #Low },
-            { $Type: 'UI.DataField', Value: validFrom, ![@UI.Importance]: #Low },
-            { $Type: 'UI.DataField', Value: validTo, ![@UI.Importance]: #Low },
+            { $Type: 'UI.DataField', Value: passNo, ![@UI.Importance]: #High, ![@HTML5.CssDefaults]: { width: '11rem' } },
+            { $Type: 'UI.DataField', Value: visitorName, ![@UI.Importance]: #High, ![@HTML5.CssDefaults]: { width: '12rem' } },
+            { $Type: 'UI.DataField', Value: visitorCompany, ![@UI.Importance]: #Low, ![@HTML5.CssDefaults]: { width: '12rem' } },
+            { $Type: 'UI.DataField', Value: area_code, ![@UI.Importance]: #Medium, ![@HTML5.CssDefaults]: { width: '9rem' } },
+            { $Type: 'UI.DataField', Value: visitDate, ![@UI.Importance]: #Low, ![@HTML5.CssDefaults]: { width: '8.5rem' } },
+            { $Type: 'UI.DataField', Value: validFrom, ![@UI.Importance]: #Low, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: validTo, ![@UI.Importance]: #Low, ![@HTML5.CssDefaults]: { width: '7rem' } },
             {
                 $Type: 'UI.DataField',
                 Value: ageingDays,
                 Label: '{i18n>AgeingDays}',
                 Criticality: #Critical,
                 CriticalityRepresentation: #WithoutIcon,
-                ![@UI.Importance]: #Medium
+                ![@UI.Importance]: #Medium,
+                ![@HTML5.CssDefaults]: { width: '7rem' }
             },
             {
                 $Type: 'UI.DataField',
                 Value: status_code,
                 Criticality: status.criticality,
-                ![@UI.Importance]: #High
+                ![@UI.Importance]: #High,
+                ![@HTML5.CssDefaults]: { width: '9.5rem' }
             },
             {
                 $Type: 'UI.DataFieldForAction',

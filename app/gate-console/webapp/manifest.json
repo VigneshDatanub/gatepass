@@ -88,6 +88,7 @@
           "options": {
             "settings": {
               "contextPath": "/VisitorPasses",
+              "initialLoad": "Enabled",
               "navigation": {
                 "VisitorPasses": {
                   "detail": {
@@ -101,7 +102,7 @@
                 },
                 "@com.sap.vocabularies.UI.v1.LineItem#GateConsole": {
                   "tableSettings": {
-                    "type": "ResponsiveTable"
+                    "type": "GridTable"
                   }
                 }
               },

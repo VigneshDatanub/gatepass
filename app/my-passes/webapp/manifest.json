@@ -88,6 +88,7 @@
           "options": {
             "settings": {
               "entitySet": "VisitorPasses",
+              "initialLoad": "Enabled",
               "navigation": {
                 "VisitorPasses": {
                   "detail": {

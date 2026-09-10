@@ -27,13 +27,13 @@ annotate GatePassService.VisitorFootfall with @(
     UI: {
         SelectionFields: [ plant, area, purpose, visitYear, visitMonth ],
         LineItem: [
-            { $Type: 'UI.DataField', Value: visitYear },
-            { $Type: 'UI.DataField', Value: visitMonth },
-            { $Type: 'UI.DataField', Value: plant },
-            { $Type: 'UI.DataField', Value: area },
-            { $Type: 'UI.DataField', Value: purpose },
-            { $Type: 'UI.DataField', Value: passCount },
-            { $Type: 'UI.DataField', Value: avgDuration }
+            { $Type: 'UI.DataField', Value: visitYear, ![@HTML5.CssDefaults]: { width: '6rem' } },
+            { $Type: 'UI.DataField', Value: visitMonth, ![@HTML5.CssDefaults]: { width: '6rem' } },
+            { $Type: 'UI.DataField', Value: plant, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: area, ![@HTML5.CssDefaults]: { width: '9rem' } },
+            { $Type: 'UI.DataField', Value: purpose, ![@HTML5.CssDefaults]: { width: '8rem' } },
+            { $Type: 'UI.DataField', Value: passCount, ![@HTML5.CssDefaults]: { width: '7rem' } },
+            { $Type: 'UI.DataField', Value: avgDuration, ![@HTML5.CssDefaults]: { width: '8rem' } }
         ],
         PresentationVariant: {
             SortOrder: [
