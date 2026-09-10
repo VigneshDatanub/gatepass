@@ -102,6 +102,7 @@ modules:
         parameters:
           service-key:
             name: gatepass-auth-key
+      - name: srv-api
     parameters:
       content:
         subaccount:
@@ -115,6 +116,17 @@ modules:
               Authentication: OAuth2UserTokenExchange
               ServiceInstanceName: gatepass-auth
               ServiceKeyName: gatepass-auth-key
+              sap.cloud.service: gatepass
+            - Name: srv-api
+              Description: Gatepass CAP Backend Service
+              Authentication: OAuth2UserTokenExchange
+              TokenServiceInstanceName: gatepass-auth
+              TokenServiceKeyName: gatepass-auth-key
+              URL: ~{srv-api/srv-url}
+              ProxyType: Internet
+              Type: HTTP
+              HTML5.DynamicDestination: true
+              HTML5.ForwardAuthToken: true
               sap.cloud.service: gatepass
 
   - name: gatepassgateconsole
@@ -227,6 +239,8 @@ resources:
       service: xsuaa
       service-plan: application
       path: ./xs-security.json
+      service-keys:
+        - name: gatepass-auth-key
       config:
         xsappname: gatepass-${org}-${space}
         tenant-mode: dedicated
@@ -267,21 +281,6 @@ resources:
       service-plan: lite
       config:
         HTML5Runtime_enabled: true
-        init_data:
-          subaccount:
-            existing_destinations_policy: update
-            destinations:
-              - Name: srv-api
-                Description: Gatepass CAP Backend Service
-                Authentication: NoAuthentication
-                ProxyType: Internet
-                Type: HTTP
-                URL: ~{srv-api/srv-url}
-                HTML5.DynamicDestination: true
-                HTML5.ForwardAuthToken: true
-                sap.cloud.service: gatepass
-    requires:
-      - name: srv-api
 
   - name: gatepass-html5-repo-host
     type: org.cloudfoundry.managed-service
