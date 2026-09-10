@@ -124,7 +124,6 @@ modules:
               TokenServiceKeyName: gatepass-auth-key
               URL: ~{srv-api/srv-url}
               HTML5.DynamicDestination: true
-              HTML5.ForwardAuthToken: true
               sap.cloud.service: gatepass
 
   - name: gatepassgateconsole
