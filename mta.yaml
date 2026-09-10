@@ -123,8 +123,6 @@ modules:
               TokenServiceInstanceName: gatepass-auth
               TokenServiceKeyName: gatepass-auth-key
               URL: ~{srv-api/srv-url}
-              ProxyType: Internet
-              Type: HTTP
               HTML5.DynamicDestination: true
               HTML5.ForwardAuthToken: true
               sap.cloud.service: gatepass
