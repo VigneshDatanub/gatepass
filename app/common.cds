@@ -1,4 +1,3 @@
-using nub.gatepass as schema from '../db/schema';
 using GatePassService from '../srv/gatepass-service';
 
 // ════════════════════════════════════════════════════════════════════
