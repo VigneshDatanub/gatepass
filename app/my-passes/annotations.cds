@@ -166,7 +166,13 @@ annotate GatePassService.PassItems with @(
             { $Type: 'UI.DataField', Value: quantity },
             { $Type: 'UI.DataField', Value: isReturnable },
             { $Type: 'UI.DataField', Value: returnedAtExit },
-            { $Type: 'UI.DataField', Value: exitRemark }
+            { $Type: 'UI.DataField', Value: exitRemark },
+            {
+                $Type: 'UI.DataFieldForAction',
+                Action: 'GatePassService.confirmReturn',
+                Label: '{i18n>ConfirmReturn}',
+                Inline: true
+            }
         ]
     }
 );

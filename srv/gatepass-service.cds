@@ -120,7 +120,10 @@ service GatePassService {
        * the gate; `remark` is recorded on the PassEvent when the guard forces
        * the check-out with items outstanding (Section 6.3).
        */
-      action checkOut(items: many ItemConfirmation, remark: String(200)) returns VisitorPasses;
+      action checkOut(
+        @UI.Hidden items: many ItemConfirmation,
+        remark: String(200)
+      ) returns VisitorPasses;
       /** Copy to a new DRAFT: visitor details + items carry over (BR-13). */
       action copy()                                                      returns VisitorPasses;
     };
