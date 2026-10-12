@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GatePass — Comprehensive Q&A</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  
+  :root {
+    --bg: #ffffff;
+    --text: #1a1a2e;
+    --text-secondary: #4a4a6a;
+    --accent: #2563eb;
+    --accent-light: #dbeafe;
+    --green: #059669;
+    --green-light: #d1fae5;
+    --blue: #2563eb;
+    --blue-light: #dbeafe;
+    --orange: #d97706;
+    --orange-light: #fef3c7;
+    --red: #dc2626;
+    --red-light: #fee2e2;
+    --border: #e2e8f0;
+    --code-bg: #f1f5f9;
+    --table-header: #f8fafc;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08);
+  }
+  
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 10.5pt;
+    padding: 40px 50px;
+    max-width: 900px;
+    margin: 0 auto;
+    background: var(--bg);
+  }
+  
+  h1 {
+    font-size: 26pt;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 0 0 8px 0;
+    padding-bottom: 12px;
+    border-bottom: 3px solid var(--accent);
+    page-break-after: avoid;
+  }
+  
+  h2 {
+    font-size: 17pt;
+    font-weight: 700;
+    color: var(--text);
+    margin: 32px 0 12px 0;
+    padding: 10px 16px;
+    background: linear-gradient(135deg, var(--accent-light), #ede9fe);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 6px 6px 0;
+    page-break-after: avoid;
+  }
+  
+  h3 {
+    font-size: 12.5pt;
+    font-weight: 600;
+    color: var(--text);
+    margin: 24px 0 10px 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--border);
+    page-break-after: avoid;
+  }
+  
+  p {
+    margin: 6px 0;
+    text-align: justify;
+  }
+  
+  strong { font-weight: 600; }
+  em { font-style: italic; color: var(--text-secondary); }
+  
+  code {
+    font-family: 'JetBrains Mono', 'Consolas', monospace;
+    font-size: 9pt;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+    color: #be185d;
+  }
+  
+  pre.code-block {
+    background: #1e293b;
+    color: #e2e8f0;
+    padding: 14px 18px;
+    border-radius: 8px;
+    margin: 10px 0;
+    overflow-x: auto;
+    font-size: 9pt;
+    line-height: 1.5;
+    page-break-inside: avoid;
+  }
+  
+  pre.code-block code {
+    background: none;
+    color: inherit;
+    padding: 0;
+    font-size: inherit;
+  }
+  
+  .table-wrapper {
+    margin: 10px 0;
+    overflow-x: auto;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+    margin: 8px 0;
+    page-break-inside: avoid;
+  }
+  
+  th {
+    background: var(--table-header);
+    font-weight: 600;
+    text-align: left;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  
+  td {
+    padding: 7px 10px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+  
+  tr:nth-child(even) td { background: #fafbfc; }
+  
+  hr {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 20px 0;
+  }
+  
+  ul, ol {
+    margin: 8px 0 8px 24px;
+  }
+  
+  li {
+    margin: 4px 0;
+  }
+  
+  blockquote {
+    border-left: 4px solid var(--orange);
+    background: var(--orange-light);
+    padding: 10px 16px;
+    margin: 10px 0;
+    border-radius: 0 6px 6px 0;
+    font-style: italic;
+    color: #92400e;
+    page-break-inside: avoid;
+  }
+  
+  .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    border-radius: 4px;
+    font-size: 8pt;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  
+  .badge-layman {
+    background: var(--green-light);
+    color: var(--green);
+    border: 1px solid #a7f3d0;
+  }
+  
+  .badge-technical {
+    background: var(--blue-light);
+    color: var(--blue);
+    border: 1px solid #93c5fd;
+  }
+  
+  .link-text {
+    color: var(--accent);
+    font-weight: 500;
+  }
+  
+  /* Cover page */
+  .cover {
+    text-align: center;
+    padding: 120px 0 80px;
+    page-break-after: always;
+  }
+  
+  .cover h1 {
+    font-size: 36pt;
+    border: none;
+    color: var(--accent);
+    margin-bottom: 16px;
+  }
+  
+  .cover .subtitle {
+    font-size: 14pt;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    font-weight: 400;
+  }
+  
+  .cover .meta {
+    font-size: 10pt;
+    color: var(--text-secondary);
+    line-height: 2;
+  }
+  
+  .cover .meta strong { color: var(--text); }
+  
+  .cover .divider {
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent), #7c3aed);
+    margin: 30px auto;
+    border-radius: 2px;
+  }
+  
+  /* Print styles */
+  @media print {
+    body { padding: 20px 30px; font-size: 9.5pt; }
+    h1 { font-size: 22pt; }
+    h2 { font-size: 14pt; margin-top: 24px; }
+    h3 { font-size: 11pt; }
+    pre.code-block { font-size: 8pt; }
+    table { font-size: 8.5pt; }
+    .cover { padding: 100px 0 60px; }
+    .cover h1 { font-size: 30pt; }
+    
+    h2, h3 { page-break-after: avoid; }
+    table, pre, blockquote { page-break-inside: avoid; }
+  }
+  
+  /* Download button (hidden in print) */
+  .download-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #1e293b, #334155);
+    padding: 12px 24px;
+    text-align: center;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  
+  .download-bar button {
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    color: white;
+    border: none;
+    padding: 10px 28px;
+    font-size: 11pt;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: transform 0.15s;
+  }
+  
+  .download-bar button:hover { transform: scale(1.03); }
+  
+  .download-bar .hint {
+    color: #94a3b8;
+    font-size: 9pt;
+    margin-left: 16px;
+  }
+  
+  @media print {
+    .download-bar { display: none !important; }
+    body { padding-top: 20px; }
+  }
+  
+  @media screen {
+    body { padding-top: 72px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="download-bar">
+  <button onclick="window.print()">📄 Save as PDF (Ctrl+P)</button>
+  <span class="hint">Use "Save as PDF" as the printer destination</span>
+</div>
+
+<div class="cover">
+  <h1>GatePass</h1>
+  <p class="subtitle">Comprehensive Q&A — Visitor Gate Pass & On-Site Register</p>
+  <div class="divider"></div>
+  <div class="meta">
+    <strong>Client:</strong> NubTech Industries Pvt. Ltd.<br>
+    <strong>Stack:</strong> SAP CAP · Node.js · OData V4 · Fiori Elements · HANA Cloud<br>
+    <strong>Scope:</strong> 1 Document · 14 Business Rules · 8 Statuses · 4 Roles<br>
+    <strong>Prepared by:</strong> AI Assistant — DataNub Enablement<br>
+    <strong>Date:</strong> 18 September 2026
+  </div>
+</div>
+
+<h1>GatePass — Comprehensive Q&A</h1>
+
+<p>Every answer below has two parts: <strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman</strong> (plain English, no jargon) and <strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical</strong> (CAP/SAP developer terms).</p>
+
+<hr>
+
+<h2>PART 1 — BUSINESS CONTEXT</h2>
+
+<hr>
+
+<h3>1.1 Who is the client, and why BTP instead of a standard SAP transaction?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>The client is <strong>NubTech Industries Pvt. Ltd.</strong> — a manufacturing company with 1,400 employees across four plants (Chennai, Hosur, Pune, Baddi). They need a system to track who enters and leaves their factory gates. No SAP standard transaction exists for visitor gate management — SAP covers purchase orders, inventory, payroll, etc., but nobody at SAP built a "visitor register" module. So this becomes a <strong>custom side-application</strong> built on SAP's cloud platform (BTP), running alongside the ERP but independent of it.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>SAP BTP (Business Technology Platform) is the correct home for a <strong>white-space process</strong> — a business need that falls outside the standard SAP S/4HANA transaction catalogue. There is no <code>T-Code</code> for gate pass management. Building it on BTP with the <strong>Cloud Application Programming Model (CAP)</strong> gives you OData V4 services, Fiori Elements UI generation, HANA Cloud persistence, and XSUAA-based authorization — all without touching the ERP core. The app is a pure <strong>side-by-side extension</strong>.</p>
+
+<hr>
+
+<h3>1.2 What is wrong with the paper gate register today? Name four problems.</h3>
+
+<div class="table-wrapper"><table><tr><th>#</th><th>Problem</th><th>Business Impact</th></tr><tr><td><strong>P1</strong></td><td>Paper register, handwritten by the visitor at the gate</td><td>Names and mobile numbers are illegible, unsearchable, unreportable</td></tr><tr><td><strong>P2</strong></td><td>No pre-registration — the guard telephones the host on arrival</td><td>Visitor waits ~11 minutes at the gate while the host is hunted down</td></tr><tr><td><strong>P3</strong></td><td>The exit column is filled in only when somebody remembers</td><td>The register shows people "inside" who left days ago — the evacuation muster list is fiction</td></tr><tr><td><strong>P4</strong></td><td>Safety induction validity is never checked at the gate</td><td>Contractors reach the shop floor on an expired induction — statutory violation</td></tr><tr><td><strong>P5</strong></td><td>Badges come off a hook board with no record</td><td>Badges are not returned, cannot be traced to a person</td></tr><tr><td><strong>P6</strong></td><td>Laptops, tools and samples walk in and out unrecorded</td><td>No proof of what came in, disputes are unresolvable</td></tr></table></div>
+
+<hr>
+
+<h3>1.3 Which problem matters most, and why?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p><strong>P3 — the exit column nobody fills in.</strong> The other problems are annoying or inefficient. P3 is dangerous. If there is a fire and the security officer cannot instantly say who is inside the building, people die. A fire drill in March 2026 took 34 minutes to produce a muster list against an 8-minute target. A factory inspector can shut you down for that. Every "fussy" design decision in this app — check-out being its own action, never auto-closing a visitor, flagging overstay instead of silently marking them as "left" — exists because of P3.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>P3 drives the architectural decisions: <code>CHECK_OUT</code> is a mandatory explicit action (not a background process), <code>ON_SITE → CANCELLED</code> is a forbidden transition, and the day-end job flags overstays (<code>isOverstay = true</code>) without inventing a departure time. The system never fabricates an <code>actualOutAt</code> timestamp. The "On Site Now" report (R1) derives its data from <code>status_code = 'ON_SITE'</code>, making it correct by construction rather than by somebody remembering to fill a column.</p>
+
+<hr>
+
+<h3>1.4 Name the four user roles and what each one does.</h3>
+
+<div class="table-wrapper"><table><tr><th>Persona</th><th>Role Code</th><th>What They Do</th><th>Volume</th></tr><tr><td><strong>Host</strong> (any employee)</td><td><code>Host</code></td><td>Pre-registers a visitor, declares items, submits, tracks, cancels. Sees <strong>only their own</strong> passes.</td><td>~1,400 users</td></tr><tr><td><strong>Security Supervisor</strong></td><td><code>SecuritySupervisor</code></td><td>Approves or rejects passes for approval-relevant areas <strong>at their plant</strong>. Reads all passes at that plant.</td><td>4 users</td></tr><tr><td><strong>Security Guard</strong></td><td><code>SecurityGuard</code></td><td>Works the gate console: verifies ID, issues badge, checks in, verifies items, checks out. <strong>At their plant only.</strong></td><td>12 users, 3 shifts</td></tr><tr><td><strong>Administrator</strong></td><td><code>Admin</code></td><td>Maintains master/config data, runs the day-end job. Reads everything. <strong>Never approves, never operates the gate.</strong></td><td>2 users</td></tr></table></div>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong> Think of it as separation of duties. The person who requests the visitor can never approve them. The person who approves can never operate the gate. The guard admits but never approves. This is what an auditor checks first.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong> Implemented via <code>@restrict</code> annotations with <code>where</code> clauses in <span class="link-text">gatepass-service.cds</span>. Instance-based authorization (<code>where: 'createdBy = $user'</code>) restricts a Host to their own passes. Plant-level restriction (<code>where: 'plant.code = $user.plant'</code>) scopes Guards and Supervisors.</p>
+
+<hr>
+
+<h3>1.5 Name three things that are deliberately out of scope.</h3>
+
+<ol><li><strong>All hardware</strong> — turnstiles, boom barriers, biometrics, RFID, cameras, photo capture, badge printers. The guard types a badge number.</li><li><strong>SMS or e-mail notification</strong> — the worklists (approval list, gate console) are the notification mechanism.</li><li><strong>Vehicle and material gate entry as documents of their own</strong> — items are declared on the visitor pass, not tracked as separate documents.</li></ol>
+<p>Also out of scope: the safety induction itself (the app only stores the reference and validates the date), multi-level approval chains, ERP integration, and native mobile apps.</p>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong> Writing this list <em>before</em> anyone asks is a consultant habit. Most project failures happen because two people assumed different things. One of them is picturing turnstiles.</p>
+
+<hr>
+
+<h2>PART 2 — ARCHITECTURE & CAP</h2>
+
+<hr>
+
+<h3>2.1 What are the main folders in a CAP project, and what goes in each?</h3>
+
+<div class="table-wrapper"><table><tr><th>Folder</th><th>What Goes In</th><th>In This Project</th></tr><tr><td><strong><code>db/</code></strong></td><td>The <strong>data model</strong> — CDS entity definitions and the CSV seed data</td><td><span class="link-text">schema.cds</span> defines all entities; <code>db/data/</code> holds CSV files</td></tr><tr><td><strong><code>srv/</code></strong></td><td>The <strong>service layer</strong> — CDS service definitions and JavaScript/TypeScript handlers</td><td><span class="link-text">gatepass-service.cds</span> (projections, actions, auth) and <span class="link-text">gatepass-service.js</span> (business logic)</td></tr><tr><td><strong><code>app/</code></strong></td><td>The <strong>UI</strong> — Fiori Elements annotations, i18n, manifest files</td><td>Sub-folders per app: <code>my-passes/</code>, <code>approvals/</code>, <code>gate-console/</code>, <code>reports/</code>, admin apps, plus <span class="link-text">common.cds</span> for shared annotations</td></tr><tr><td><strong><code>test/</code></strong></td><td><strong>Automated tests</strong></td><td>Test scripts using <code>@cap-js/cds-test</code></td></tr></table></div>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong> Think of it as three layers of a building. The basement (<code>db/</code>) stores data. The ground floor (<code>srv/</code>) runs the business rules. The top floor (<code>app/</code>) is what people see on screen.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong> CAP's convention-over-configuration means <code>cds watch</code> auto-discovers <code>db/</code>, <code>srv/</code>, and <code>app/</code>. The <code>db/data/</code> CSV convention (<code>namespace-EntityName.csv</code>) auto-seeds on <code>cds deploy</code>. The <code>gen/</code> folder holds compiled EDMX and SQL output.</p>
+
+<hr>
+
+<h3>2.2 Why is the database model not exposed directly to the UI? What sits in between?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>Imagine a bank vault. You don't let customers walk into the vault and grab cash. Instead, there's a counter (the <strong>service layer</strong>) in between. The teller checks your ID, applies rules, and hands you the money. The service layer is that teller — it decides what data to show, what to hide, and what rules to enforce.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>The <strong>service definition</strong> (<span class="link-text">gatepass-service.cds</span>) creates <strong>projections</strong> (<code>entity VisitorPasses as projection on gatepass.transaction.VisitorPasses</code>) that sit between the database model and the UI. This layer:</p>
+
+<ol><li><strong>Controls the shape</strong> — can add virtual fields (e.g., <code>ageingDays</code>), exclude internal fields, rename things</li><li><strong>Enforces authorization</strong> — <code>@restrict</code> annotations with <code>where</code> clauses</li><li><strong>Defines actions</strong> — <code>submit()</code>, <code>approve()</code>, <code>checkIn()</code>, etc.</li><li><strong>Adds capabilities</strong> — <code>@odata.draft.enabled</code>, <code>@readonly</code>, search annotations</li></ol>
+<p>The UI talks to the OData V4 service, never to the database tables directly.</p>
+
+<hr>
+
+<h3>2.3 Should business rules be in the Fiori UI or in the server handlers? Why?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p><strong>Always on the server.</strong> If you put the rule in the UI, it only works as long as someone uses that specific screen. Anybody with a URL and a tool like <code>curl</code> can bypass it completely. The spec says (TC-08): "Send a raw PATCH setting actualInAt, passNo and status — all refused. This is the test that proves the rules live on the server."</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>Business rules are implemented in <span class="link-text">gatepass-service.js</span> as <strong>before/on/after handlers</strong>. The UI can provide convenience (hiding a button, showing a warning), but the <em>enforcement</em> must be server-side. CAP handlers run for every caller — Fiori Elements, REST clients, test scripts, OData batch calls. The spec explicitly says: "Enforce it on the server, not by leaving the button off the UI."</p>
+
+<p>For example, <code>idProofNumber</code> masking (BR-14) is done in an <code>after('READ')</code> handler, not by a UI formatter. Hiding the "Approve" button from the host is nice UX, but the server must still return <code>403</code> if they call the action directly.</p>
+
+<hr>
+
+<h3>2.4 Why is "requires approval" a configuration flag rather than an IF statement?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>Imagine the security team says: "Starting next month, the canteen also needs approval." If that rule is coded as <code>if (area === 'SHOPFLOOR' || area === 'WAREHOUSE')</code>, a developer has to change the code, test it, and deploy it. That takes days and introduces risk. Instead, the VisitAreas table has a column called <code>requiresApproval</code>. The admin ticks a checkbox in the master data screen. Done. No developer needed.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>BR-04 is a <strong>determination, not validation</strong>. The submit handler reads <code>area.requiresApproval</code> and routes to <code>REQUESTED</code> or <code>APPROVED</code>. This is the "configuration-versus-code lesson" the spec calls out. The same applies to <code>requiresInduction</code> (BR-05). Both are Boolean columns on the <span class="link-text"><code>VisitAreas</code></span> entity. The code in the handler is:</p>
+
+<pre class="code-block"><code class="lang-javascript">const target = area?.requiresApproval ? 'REQUESTED' : 'APPROVED';
+</code></pre>
+
+<p>One line of generic code, infinite configuration combinations. TC-01 proves it: OFFICE (no approval) → straight to APPROVED. SHOPFLOOR (approval required) → REQUESTED.</p>
+
+<hr>
+
+<h3>2.5 EHS decides that from 1 October the R&D lab also needs a safety induction. What has to change?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>An administrator opens the Visit Areas master data screen, finds the "R&D Laboratory" row for the Chennai plant, and ticks the "Requires Induction" checkbox. Save. Done. From that moment, anyone submitting a pass to the R&D lab must provide an induction reference number and a valid expiry date, or the system refuses. <strong>No code changes. No deployment. No developer.</strong></p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>Update the <code>RNDLAB</code> row in <code>VisitAreas</code> where <code>plant_code = '1000'</code>: set <code>requiresInduction = true</code>. The submit handler already checks <code>area.requiresInduction</code> (BR-05) generically. The check-in handler re-validates it. The test data in Section 12.2 shows RNDLAB currently has <code>requiresInduction: false</code> — flipping it is a data operation, not a code change.</p>
+
+<blockquote>The spec says: <em>"If any part of your answer is 'change the code', redesign the model — that request should never reach a developer at all."</em></blockquote>
+
+<hr>
+
+<h3>2.6 Why is passNo assigned at submit rather than when the draft is created?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>Think of it like a cheque book. You don't number the cheques before deciding whether to write them. A draft is just a rough note — the host might never finish it, or might delete it. If you hand out pass numbers at draft creation, you'd burn through numbers for passes that never exist. Also, you'd have "gaps" in the number series that security can't explain to an auditor.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>The pass number format is <code>GP-<plant>-<YYYY>-<5 digits></code>, generated sequentially per plant per year (BR-12). Assigning at draft time would:</p>
+<ol><li><strong>Waste numbers</strong> — drafts that are abandoned or deleted would leave gaps</li><li><strong>Create concurrency problems</strong> — multiple users creating drafts simultaneously would need pessimistic locking just to hold a number</li><li><strong>Violate the contract</strong> — a draft has no rules applied yet; it's private and invisible to everyone else. Giving it an official number implies it's a real pass.</li></ol>
+<p>In the code (<span class="link-text">gatepass-service.js:431</span>):</p>
+<pre class="code-block"><code class="lang-javascript">const passNo = await generatePassNo(pass.plant_code);
+</code></pre>
+<p>This runs only in the <code>submit</code> action handler, after all validations pass.</p>
+
+<hr>
+
+<h3>2.7 Why is the status history kept in a separate PassEvents table instead of 'changedBy / changedOn' fields on the pass?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>If you only keep "last changed by" on the pass, you know who did the <em>most recent</em> thing — but not who submitted it, who approved it, or when the guard checked the visitor in. It's like a notebook where every entry overwrites the previous one. You lose the story. PassEvents is the full diary: every action, who did it, when, and what the status was before and after.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p><code>PassEvents</code> is an <strong>immutable append-only audit log</strong> — one row per status transition. Each row records <code>fromStatus</code>, <code>toStatus</code>, <code>action</code>, <code>actor</code> (from <code>req.user.id</code>), <code>actedAt</code> (server timestamp), and an optional <code>remark</code>. The <code>managed</code> aspect on <code>VisitorPasses</code> gives you <code>createdBy/createdAt/modifiedBy/modifiedAt</code> — that's the "who touched it last" snapshot. PassEvents gives you the complete lifecycle trace: DRAFT → REQUESTED → APPROVED → ON_SITE → CHECKED_OUT, with every actor and timestamp.</p>
+
+<p>This is critical for:</p>
+<ul><li><strong>Audit compliance</strong> — an auditor can reconstruct who approved what and when</li><li><strong>Dispute resolution</strong> — if a badge goes missing, you can prove the exact timeline</li><li><strong>Immutability</strong> — even an Admin cannot modify or delete event rows (TC-10 tests this)</li></ul>
+<hr>
+
+<h3>2.8 Why one transition table used by every action, instead of checking inside each handler?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>Imagine seven different guards each carrying their own list of which doors they can open. If one list has a typo, that door is now insecure. Instead, you have <em>one master keycard list</em> at the front desk. Everyone checks the same list. One place to update, one place to audit, zero discrepancies.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>The transition table is <code>ACTION_MAP</code> at the top of <span class="link-text">gatepass-service.js</span>:</p>
+
+<pre class="code-block"><code class="lang-javascript">const ACTION_MAP = {
+  submit:     { from: ['DRAFT'],                           to: null },
+  approve:    { from: ['REQUESTED'],                       to: 'APPROVED' },
+  rejectPass: { from: ['REQUESTED'],                      to: 'REJECTED' },
+  cancel:     { from: ['DRAFT', 'REQUESTED', 'APPROVED'], to: 'CANCELLED' },
+  checkIn:    { from: ['APPROVED'],                        to: 'ON_SITE' },
+  checkOut:   { from: ['ON_SITE'],                         to: 'CHECKED_OUT' },
+  expire:     { from: ['APPROVED'],                        to: 'EXPIRED' },
+  overstay:   { from: ['ON_SITE'],                        to: 'ON_SITE' }
+};
+</code></pre>
+
+<p>Every action calls <code>assertTransition(currentStatus, actionName, req)</code>. Benefits:</p>
+<ol><li><strong>Single source of truth</strong> — one table to read, audit, and test</li><li><strong>Forbidden transitions are explicit by absence</strong> — ON_SITE → CANCELLED is simply not in the table</li><li><strong>Consistent error handling</strong> — the same <code>409 INVALID_STATUS</code> response for any illegal move</li><li><strong>Easier to extend</strong> — adding a new transition is one line, not scattered across seven handlers</li></ol>
+<hr>
+
+<h3>2.9 How does the same application run on SQLite locally and on SAP HANA Cloud on BTP?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>CAP acts as a translator. You describe your data in a language called CDS (like a blueprint). When you run locally, CAP reads the blueprint and creates SQLite tables. When you deploy to the cloud, it reads the same blueprint and creates HANA tables. Your code doesn't know or care which database is underneath — it speaks to CAP, and CAP speaks to whichever database is present.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>CDS (Core Data Services) is <strong>database-agnostic</strong>. The same <span class="link-text">schema.cds</span> compiles to different SQL dialects:</p>
+
+<ul><li><strong>Local development:</strong> <code>@cap-js/sqlite</code> is in <code>devDependencies</code> in <span class="link-text">package.json</span>. <code>cds watch</code> → SQLite in-memory or file-based.</li><li><strong>Production:</strong> <code>@cap-js/hana</code> is in <code>dependencies</code>. The <code>[production]</code> profile in <code>package.json</code> sets <code>auth.kind: 'xsuaa'</code>. The <code>mta.yaml</code> deploys the HDI container to HANA Cloud.</li></ul>
+<p>The CQL (CDS Query Language) API — <code>SELECT.from()</code>, <code>INSERT.into()</code>, <code>UPDATE()</code> — is compiled by the CAP runtime to the appropriate SQL dialect. As long as you use CQL and not raw SQL, portability is automatic. The spec says: "Same model file runs on HANA" is a Day 5 gate criterion.</p>
+
+<hr>
+
+<h2>PART 3 — DATA MODEL</h2>
+
+<hr>
+
+<h3>3.1 List the entities — documents, children, master, and configuration data.</h3>
+
+<div class="table-wrapper"><table><tr><th>Entity</th><th>Kind</th><th>Description</th></tr><tr><td><strong>VisitorPasses</strong></td><td>Transactional document (header)</td><td>One planned or actual visit by one visitor. The <strong>only document</strong> in this app.</td></tr><tr><td><strong>PassItems</strong></td><td>Owned child (Composition)</td><td>One line per item carried in (laptop, toolkit, sample). Returnable flag, returned-at-exit flag.</td></tr><tr><td><strong>PassEvents</strong></td><td>Owned child (Composition, write-once)</td><td>One row per status change. Never updated or deleted by anybody.</td></tr><tr><td><strong>Employees</strong></td><td>Master data</td><td>Every employee who can be a host. Has default plant, active flag.</td></tr><tr><td><strong>Plants</strong></td><td>Master data</td><td>The four sites, with gate opening/closing hours.</td></tr><tr><td><strong>VisitAreas</strong></td><td>Configuration data</td><td>Office, shop floor, warehouse, lab. Carries <code>requiresApproval</code> and <code>requiresInduction</code> — the two flags that drive the entire process.</td></tr><tr><td><strong>VisitPurposes</strong></td><td>Code list</td><td>SUPPLIER, CUSTOMER, INTERVIEW, SERVICE, COURIER, GOVT, OTHER</td></tr><tr><td><strong>IdProofTypes</strong></td><td>Code list</td><td>AADHAAR, PAN, DL, PASSPORT, EMPCARD</td></tr><tr><td><strong>PassStatus</strong></td><td>Code list</td><td>DRAFT, REQUESTED, APPROVED, REJECTED, ON_SITE, CHECKED_OUT, CANCELLED, EXPIRED — with criticality for Fiori badge colours</td></tr></table></div>
+
+<hr>
+
+<h3>3.2 Composition vs. Association — give one example of each.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<ul><li><strong>Composition</strong> = "part of." A pass item (a laptop listed on a pass) doesn't make sense without the pass. Delete the pass → the item is deleted too. It's like a page in a book — rip out the book, the page goes with it.</li><li><strong>Association</strong> = "refers to." A pass <em>refers to</em> an employee as the host. The employee exists independently. Deleting the pass must never delete the employee. It's like writing someone's phone number on a sticky note — throwing away the note doesn't erase the person.</li></ul>
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+
+<p><strong>Composition example</strong> — Pass → PassItems (<span class="link-text">schema.cds:132-133</span>):</p>
+<pre class="code-block"><code class="lang-cds">items : Composition of many PassItems on items.pass = $self;
+</code></pre>
+<p>This means deep insert, deep update, and cascade delete. A <code>POST</code> to the pass with inline items creates everything in one request.</p>
+
+<p><strong>Association example</strong> — Pass → Employees (<span class="link-text">schema.cds:103</span>):</p>
+<pre class="code-block"><code class="lang-cds">host : Association to master.Employees;
+</code></pre>
+<p>This creates a foreign key (<code>host_ID</code>) but no ownership. Deleting a pass never touches the Employees table.</p>
+
+<hr>
+
+<h3>3.3 Which three fields must the server always set, and never accept from the browser?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<ol><li><strong><code>passNo</code></strong> — the official pass number. If a user could type it, they could create duplicates or forge numbers.</li><li><strong><code>actualInAt</code></strong> — the check-in timestamp. If the browser could set this, someone could fake a check-in.</li><li><strong><code>actualOutAt</code></strong> — the check-out timestamp. If the browser could set this, someone could give a visitor a departure time they never had — and the whole register becomes worthless (back to P3).</li></ol>
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>These three (plus <code>status_code</code>, <code>badgeNo</code>, <code>durationMinutes</code>, <code>isOverstay</code>, <code>rejectionReason</code>, <code>host_ID</code>) are listed in the <code>SYSTEM_FIELDS</code> array (<span class="link-text">gatepass-service.js:31-35</span>):</p>
+
+<pre class="code-block"><code class="lang-javascript">const SYSTEM_FIELDS = [
+  'passNo', 'actualInAt', 'actualOutAt', 'durationMinutes',
+  'isOverstay', 'badgeNo', 'status_code', 'status',
+  'rejectionReason', 'host_ID', 'host'
+];
+</code></pre>
+
+<p>The <code>stripSystemFields</code> handler runs <code>before('UPDATE')</code> on both the draft entity and the active entity. It <code>delete</code>s these keys from <code>req.data</code> silently. TC-08 sends a raw PATCH with all three — nothing changes in the database.</p>
+
+<hr>
+
+<h3>3.4 Why is the host's name never stored on the pass itself?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>If you copy someone's name onto the pass, you now have two copies of the name — one on the pass, one on the employee record. When Anitha Raman gets married and changes her last name, every old pass still shows the old name. Or worse, you update some passes but forget others. One source of truth is always better than two.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>The pass stores <code>host_ID</code> (a foreign key / Association to <code>Employees</code>), not <code>host_name</code>. The name is <strong>read through the association</strong> at query time: <code>$expand=host</code> resolves to the current employee record. This is the <strong>no-copy-of-master-data</strong> principle. The spec says: "never copy the name onto the pass, read it through the association." The rubric docks marks for "copies of data that belongs to master data."</p>
+
+<hr>
+
+<h3>3.5 What is a code list in CAP, and why use one instead of a plain text field?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>A code list is a fixed menu of valid choices — like a dropdown. Instead of letting the user type "Supplier", "supplier", "SUPPLIER", "Vendor meeting", you give them a list: SUPPLIER, CUSTOMER, INTERVIEW, etc. Each has a code (what the computer stores) and a description (what the user sees). This prevents typos, enables translation, and makes reporting reliable.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>CAP's <code>sap.common.CodeList</code> aspect provides <code>name</code> and <code>descr</code> fields with i18n support out of the box. The entities extend it:</p>
+
+<pre class="code-block"><code class="lang-cds">entity VisitPurposes : CodeList { key code : String(12); }
+</code></pre>
+
+<p>Benefits:</p>
+<ol><li><strong>Referential integrity</strong> — only valid codes are accepted</li><li><strong>Translation</strong> — <code>name</code> and <code>descr</code> support locale-specific text via <code>_texts</code> tables</li><li><strong>Value helps</strong> — Fiori Elements automatically renders dropdowns from code lists</li><li><strong>Reporting</strong> — aggregation by <code>purpose_code</code> gives consistent, comparable results</li></ol>
+<hr>
+
+<h3>3.6 What does the <code>managed</code> aspect give you, and why should you never write those fields yourself?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>The <code>managed</code> aspect is like a security camera on a filing cabinet. Every time someone opens the cabinet (creates or updates a record), the camera automatically stamps: "Created by Anitha on 18-Sep-2026 at 3pm" or "Last changed by Karthik on 19-Sep-2026 at 10am." You don't write this yourself — the camera does it. If you wrote it yourself, you could lie.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>The <code>managed</code> aspect (from <code>@sap/cds/common</code>) adds four fields: <code>createdAt</code>, <code>createdBy</code>, <code>modifiedAt</code>, <code>modifiedBy</code>. CAP's generic handlers populate them automatically from the request context (<code>req.user.id</code> and <code>req.timestamp</code>). Writing them manually would:</p>
+<ol><li><strong>Allow spoofing</strong> — a user could claim another user created the record</li><li><strong>Be redundant</strong> — CAP already does it</li><li><strong>Break instance-based auth</strong> — the <code>where: 'createdBy = $user'</code> clause in <code>@restrict</code> depends on CAP setting <code>createdBy</code> correctly</li></ol>
+<p>The spec says: "Never write these yourself. CAP maintains them."</p>
+
+<hr>
+
+<h3>3.7 PassEvents is described as 'write once'. What does that mean, and how do you enforce it?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>"Write once" means: once a record is written, nobody — not the admin, not the person who wrote it, not even the system itself — can change or delete it. Ever. It's like writing in permanent marker. This is the audit trail. If an event could be edited, someone could erase the fact that a visitor was checked in, and you're back to the paper register problem.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>Enforced at three levels:</p>
+
+<ol><li><strong>CDS annotation</strong> — <code>@readonly</code> on the service projection (<span class="link-text">gatepass-service.cds:178</span>) blocks CREATE, UPDATE, DELETE at the OData protocol layer</li><li><strong>Handler belt</strong> — <code>before(['CREATE', 'UPDATE', 'DELETE'], PassEvents)</code> rejects with <code>403 EVENTS_IMMUTABLE</code> (<span class="link-text">gatepass-service.js:313-314</span>)</li><li><strong>Authorization</strong> — no role is granted <code>UPDATE</code> or <code>DELETE</code> on <code>PassEvents</code></li></ol>
+<p>The only way events are written is through the internal <code>writeEvent()</code> helper function, which uses the <code>db()</code> entities (bypassing service-level restrictions) inside action handlers. TC-10 tests this: "Update, then delete, a PassEvent row over OData — both refused."</p>
+
+<hr>
+
+<h3>3.8 How is a master record taken out of use, and why is it never deleted?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>You flip the "Active" switch to off. The record is still there — old passes can still show "this visit was at Plant 4000" — but it disappears from the dropdown menus for new passes. You never delete it because old passes reference it. If you deleted Plant 4000, every pass that was issued for that plant would have a broken link — it would say "plant: ???" instead of a name.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>Every master entity (<code>Employees</code>, <code>Plants</code>, <code>VisitAreas</code>) has an <code>isActive : Boolean default true</code> field. The service grants no role the <code>DELETE</code> operation — both <code>@Capabilities.DeleteRestrictions.Deletable: false</code> (hides the UI button) and a handler-level <code>before('DELETE')</code> reject (prevents raw HTTP DELETE). Value helps filter to <code>isActive = true</code> for new data entry, but old passes resolve the association regardless of the active flag. This is the <strong>soft-delete</strong> pattern.</p>
+
+<hr>
+
+<h3>3.9 Which fields are mandatory only in certain situations? Name them and the condition.</h3>
+
+<div class="table-wrapper"><table><tr><th>Field</th><th>Condition</th></tr><tr><td><strong><code>purposeDetail</code></strong></td><td>Mandatory when <code>purpose_code = 'OTHER'</code>, minimum 15 characters</td></tr><tr><td><strong><code>inductionRef</code></strong></td><td>Mandatory when the selected area has <code>requiresInduction = true</code></td></tr><tr><td><strong><code>inductionValidTill</code></strong></td><td>Mandatory alongside <code>inductionRef</code>; must be ≥ <code>visitDate</code></td></tr><tr><td><strong><code>rejectionReason</code></strong></td><td>Mandatory on the <code>rejectPass</code> action, minimum 10 characters (BR-10)</td></tr><tr><td><strong><code>exitRemark</code></strong></td><td>Mandatory on a returnable item when the guard does NOT confirm its return (BR-09)</td></tr><tr><td><strong><code>badgeNo</code></strong></td><td>Mandatory at check-in (BR-08), but not at any other stage</td></tr></table></div>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong> These are <strong>conditionally mandatory</strong> (<code>Cond.</code> in the spec). They cannot be enforced with a simple <code>@mandatory</code> annotation — they require handler-level logic in the <code>submit</code>, <code>checkIn</code>, <code>rejectPass</code>, and <code>checkOut</code> action handlers.</p>
+
+<hr>
+
+<h2>PART 4 — BUSINESS RULES (BR-01 to BR-14)</h2>
+
+<hr>
+
+<h3>BR-01: Visit date must not be in the past.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> You cannot raise a pass for yesterday. If the visit date is before today, the system refuses.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> When checked:</strong> At <strong>Save</strong> (if validated) and at <strong>Submit</strong>. The submit handler compares <code>pass.visitDate < localDate()</code>. If true: error <code>BR01_PAST_DATE</code> — <em>"A pass cannot be raised for a date that has already passed."</em></p>
+
+<hr>
+
+<h3>BR-02: The visit window must be valid.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> Four checks in one:</p>
+<ol><li><code>validTo</code> must be after <code>validFrom</code> (can't end before you start)</li><li>Both are on the same day (no overnight visits)</li><li>Maximum 12-hour window</li><li>Must fall inside the plant's gate hours (Chennai opens 07:00, closes 20:00)</li></ol>
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> When checked:</strong> Save and Submit. The handler converts times to minutes-since-midnight and compares against <code>plant.gateOpenTime</code> / <code>plant.gateCloseTime</code>. Error messages: <code>BR02_WINDOW_ORDER</code>, <code>BR02_MAX_12H</code>, <code>BR02_GATE_HOURS</code>.</p>
+
+<hr>
+
+<h3>BR-03: Visitor details and active checks.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> <code>visitorName</code> ≥ 3 characters. <code>visitorMobile</code> exactly 10 digits starting with 6–9. The host, plant, and area must all be marked as active.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> When checked:</strong> At Submit. The mobile regex is <code>/^[6-9]\d{9}$/</code>. Active checks query the master records: <code>if (host && !host.isActive)</code> → error <code>BR03_HOST_INACTIVE</code>. Employee E1006 (Deepak Nair) exists in the test data specifically to make this rule fire.</p>
+
+<hr>
+
+<h3>BR-04: Automatic routing — approval or straight to approved.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> If the area has <code>requiresApproval = true</code>, submit sends the pass to <code>REQUESTED</code> (waiting for the supervisor). If <code>false</code>, it goes straight to <code>APPROVED</code>.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Why no error message?</strong> Because this is a <strong>determination, not a validation</strong>. It doesn't refuse anything — it decides the outcome. One config column, two outcomes, no code change. The resulting status is obvious on the screen via the coloured badge.</p>
+
+<pre class="code-block"><code class="lang-javascript">const target = area?.requiresApproval ? 'REQUESTED' : 'APPROVED';
+</code></pre>
+
+<hr>
+
+<h3>BR-05: Safety induction requirement.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> If the area has <code>requiresInduction = true</code>, the pass must include an induction reference number (<code>inductionRef</code>) and a valid-until date (<code>inductionValidTill</code>) that is on or after the visit date.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Why checked twice?</strong></p>
+<ol><li><strong>At Submit</strong> — validates against <code>visitDate</code>. Catches: "your induction expired last month."</li><li><strong>At Check-In</strong> — validates against <strong>today's date</strong>. Catches: "your induction was valid when the pass was submitted last week, but it expired yesterday." The spec says: <em>"An expired induction cannot reach the shop floor."</em> The gate is the last line of defence.</li></ol>
+<hr>
+
+<h3>BR-06: Check-in window.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> A guard can check in a visitor starting 30 minutes before <code>validFrom</code> until <code>validTo</code>, on the visit date only. 31 minutes early = hard error. 29 minutes early = fine.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> When checked:</strong> At Check-In only. Error: <code>BR06_OUTSIDE_WINDOW</code> — <em>"This pass is valid from {0} to {1} on {2}. Ask the host to extend it."</em></p>
+
+<hr>
+
+<h3>BR-07: Same visitor cannot be on-site twice.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> The same mobile number cannot be <code>ON_SITE</code> on two passes at once, across all plants.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Why is it a warning at submit but an error at check-in?</strong></p>
+
+<p>At <strong>submit</strong>, it's a <strong>warning</strong>: the host may legitimately be registering tomorrow's visit while the visitor is still inside today. Blocking that would be wrong. The host sees: <em>"Warning: this visitor already has an open pass today at {0}."</em></p>
+
+<p>At <strong>check-in</strong>, it's a <strong>hard error</strong>: if the guard admitted the same person on two passes, the muster list would show them twice — or, worse, checking out on one pass would still show them as "inside" on the other. The guard sees: <em>"Already on site at {0} on pass {1} — check them out there first."</em></p>
+
+<p><strong>Same rule, same data, two severities at two moments.</strong> This is the most important rule to study.</p>
+
+<hr>
+
+<h3>BR-08: Badge uniqueness.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> At check-in, a badge number is mandatory. That badge number must not be currently held by another <code>ON_SITE</code> pass. At check-out, the badge is released (set to <code>null</code>).</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> When checked:</strong> At Check-In. Error: <code>BR08_BADGE_IN_USE</code> — <em>"Badge {0} is already issued to {1} on pass {2}."</em></p>
+
+<hr>
+
+<h3>BR-09: Item verification at check-out.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> Check-out is blocked while any returnable item is unconfirmed. The guard must either tick the item as returned (<code>returnedAtExit = true</code>) or provide a remark explaining why it's not leaving (<code>exitRemark</code>). This is how the "laptop walked out" disputes from P6 become resolvable.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> When checked:</strong> At Check-Out. Error: <code>BR09_ITEMS_UNCONFIRMED</code> — <em>"{0} returnable item(s) not confirmed: {1}. Confirm them, or record why they are not leaving."</em></p>
+
+<hr>
+
+<h3>BR-10: Rejection needs a proper reason.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> When a supervisor rejects a pass, they must give a reason of at least 10 characters. "No" is not enough — <em>"the host has to be able to act on it."</em></p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> When checked:</strong> At Reject. Error: <code>BR10_REASON_SHORT</code>. The reason is stored on both the pass (<code>rejectionReason</code>) and the event row, and is read-only forever after.</p>
+
+<hr>
+
+<h3>BR-11: Nobody may approve their own pass.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> Even if Meera holds both the Host and SecuritySupervisor roles, she cannot approve a pass where she is the host. This is <strong>segregation of duties</strong>.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Why it exists:</strong> This is the first thing an auditor tests. If the same person can both request and approve, the entire approval workflow is meaningless. The test user <code>meera</code> exists specifically to test this. Error: <code>BR11_SELF_APPROVE</code> — <em>"You cannot approve a visitor you are hosting yourself."</em></p>
+
+<pre class="code-block"><code class="lang-javascript">if (await isOwnPass(pass, req)) return fail(req, 403, 'BR11_SELF_APPROVE');
+</code></pre>
+
+<hr>
+
+<h3>BR-12: Pass number generation and event logging — two parts.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule — Part 1:</strong> <code>passNo</code> is generated at submit in the format <code>GP-<plant>-<YYYY>-<5 digits></code>, per plant per year, never reused.</p>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule — Part 2:</strong> Every status change writes exactly one <code>PassEvent</code> row <strong>in the same transaction</strong>. If the event row cannot be written, the status change rolls back too — status and audit commit together or not at all.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong> The <code>generatePassNo()</code> function queries the last passNo with that prefix, increments it, and pads to 5 digits. The <code>writeEvent()</code> function runs on the same request transaction (CAP's default — no explicit <code>tx.begin()</code>/<code>tx.commit()</code> needed because the entire <code>on</code> handler runs in one transaction).</p>
+
+<hr>
+
+<h3>BR-13: Copy to a new draft.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> Any pass (in any status) can be copied into a new DRAFT. Visitor details, ID proof, and items carry over. Pass number, status, dates, badge, and timestamps do <strong>not</strong> copy. The host sees: <em>"Pass copied from {0}. Check the dates and the induction validity before submitting."</em></p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong> The <code>copy</code> action uses <code>this.send({ event: 'NEW' })</code> to create a draft (not an active record), then inserts the items into the draft's items table. This ensures the copy behaves exactly like a new draft — private, invisible to other users, no pass number.</p>
+
+<hr>
+
+<h3>BR-14: ID proof number masking.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> The <code>idProofNumber</code> (e.g., Aadhaar number) is returned <strong>masked</strong> (showing only the last 4 characters) to everyone except:</p>
+<ul><li>The <strong>guard</strong> — but only when the pass is in <code>APPROVED</code> status (at the moment of check-in, when they need to compare the number against the physical ID card)</li><li>The <strong>Admin</strong> — who has full access for administrative purposes</li></ul>
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Where implemented:</strong> In an <code>after('READ')</code> handler on the <strong>server</strong>, never in the UI:</p>
+
+<pre class="code-block"><code class="lang-javascript">const maskIdProof = (row, req) =&gt; {
+  if (!row?.idProofNumber) return;
+  if (req.user.is('Admin')) return;
+  if (req.user.is('SecurityGuard') &amp;&amp; row.status_code === 'APPROVED') return;
+  row.idProofNumber = '****' + row.idProofNumber.slice(-4);
+};
+</code></pre>
+
+<hr>
+
+<h2>PART 5 — STATUS LIFECYCLE & AUTHORIZATION</h2>
+
+<hr>
+
+<h3>5.1 The eight statuses and the normal path.</h3>
+
+<pre class="code-block"><code class="lang-text">DRAFT → REQUESTED → APPROVED → ON_SITE → CHECKED_OUT
+</code></pre>
+
+<div class="table-wrapper"><table><tr><th>Status</th><th>Meaning</th><th>Criticality (colour)</th></tr><tr><td><code>DRAFT</code></td><td>Host is still typing. Private, no rules applied. No passNo.</td><td>—</td></tr><tr><td><code>REQUESTED</code></td><td>Submitted, waiting for supervisor approval.</td><td>2 (amber)</td></tr><tr><td><code>APPROVED</code></td><td>Ready for the visitor to arrive at the gate.</td><td>3 (green)</td></tr><tr><td><code>REJECTED</code></td><td>Supervisor refused. Terminal — never reopened.</td><td>1 (red)</td></tr><tr><td><code>ON_SITE</code></td><td>Visitor is physically inside the plant.</td><td>5 (blue)</td></tr><tr><td><code>CHECKED_OUT</code></td><td>Visitor has left. Terminal.</td><td>3 (green)</td></tr><tr><td><code>CANCELLED</code></td><td>Host called off the visit. Terminal.</td><td>—</td></tr><tr><td><code>EXPIRED</code></td><td>Approved pass whose validity passed and visitor never showed up. Terminal.</td><td>1 (red)</td></tr></table></div>
+
+<p><strong>Shortcut path:</strong> If <code>area.requiresApproval = false</code>, submit goes straight from DRAFT → APPROVED, skipping REQUESTED.</p>
+
+<hr>
+
+<h3>5.2 Which transition is NOT allowed, and why?</h3>
+
+<p><strong>ON_SITE → CANCELLED</strong> does not exist and never will.</p>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong> A person is physically inside a factory. You can't "cancel" their presence — they're standing there. The only way a pass in ON_SITE ends is a human at the gate pressing Check Out. Inventing a cancellation for someone who is inside would be inventing a departure that never happened — and that's exactly the P3 problem the entire app exists to solve.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong> The transition is simply absent from <code>ACTION_MAP</code>. Any attempt to call <code>cancel</code> on an ON_SITE pass will hit <code>assertTransition()</code> and get <code>409 INVALID_STATUS</code>.</p>
+
+<hr>
+
+<h3>5.3 Why is a cancelled pass kept rather than deleted?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong> Deleting it destroys the audit trail. If Anitha raised 5 passes this month and cancelled 2, the report should show "5 raised, 2 cancelled" — not "3 raised." The cancelled pass stays visible and countable. It just can't be used anymore.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong> Cancellation sets <code>status_code = 'CANCELLED'</code> and writes a <code>PassEvent</code>. The pass remains in the database with all its data intact. This is also why <code>CANCELLED</code> is a terminal status — no further transitions are allowed.</p>
+
+<hr>
+
+<h3>5.4 What does the day-end job do, and why doesn't it close a visitor who is still on site?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Rule:</strong> The day-end job (<code>runDayEndJob</code>) does two things:</p>
+<ol><li><strong>Expire</strong> — any <code>APPROVED</code> pass whose validity has passed and was never used → <code>EXPIRED</code></li><li><strong>Flag overstay</strong> — any <code>ON_SITE</code> pass whose <code>validTo</code> has passed → set <code>isOverstay = true</code>, but status <strong>stays ON_SITE</strong></li></ol>
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Why not auto-close?</strong> Because the visitor is still inside the building. If the system set <code>actualOutAt = 21:00</code> and changed the status to <code>CHECKED_OUT</code>, the muster list would say "nobody inside" when someone actually is. That's P3 with a computer behind it. The overstay flag makes them appear on the supervisor's overstay report (R2), prompting a human to go find the visitor and walk them to the gate.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong> The job is idempotent — running it twice changes nothing the second time (the filter includes <code>isOverstay: false</code> for the overstay query). The Admin runs it once each evening. Returns <code>{ expired: N, overstay: M }</code>.</p>
+
+<hr>
+
+<h3>5.5 Role-based vs. instance-based authorization in CAP.</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<ul><li><strong>Role-based</strong> = "Are you a guard? Then you can check people in." It's like a job title.</li><li><strong>Instance-based</strong> = "Are you the guard at <em>this specific plant</em>?" or "Is this <em>your own</em> pass?" It's like checking your badge number against the door number.</li></ul>
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<ul><li><strong>Role-based:</strong> <code>@requires: 'Admin'</code> or <code>grant: 'READ', to: 'Host'</code> — checks if <code>req.user.is('Admin')</code>.</li><li><strong>Instance-based:</strong> <code>where: 'createdBy = $user'</code> — the CAP runtime evaluates this against the logged-in user and adds it to the SQL WHERE clause. The Host can only see passes where <code>createdBy</code> matches their user ID. The Guard can only see passes where <code>plant.code</code> matches their <code>$user.plant</code> attribute.</li></ul>
+<p>The <code>@restrict</code> annotation in <span class="link-text">gatepass-service.cds</span> combines both.</p>
+
+<hr>
+
+<h3>5.6 A second host opens another host's pass by typing the URL directly. What must come back?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong> They must get <strong>403 Forbidden</strong> or an <strong>empty result</strong> — never the actual data. Hiding the button in the UI is not enough. The spec calls this out explicitly: <em>"'the button is hidden' is not an answer."</em> A URL can be typed, a curl command can be crafted, a test tool can be pointed. The rule must live on the <strong>server</strong>, not on the <strong>screen</strong>.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong> The <code>where: 'createdBy = $user'</code> clause on the Host's <code>READ</code> grant means the CAP runtime adds a SQL filter. When <code>karthik</code> requests <code>anitha</code>'s pass by ID, the generated query includes <code>WHERE createdBy = 'karthik'</code> — which matches zero rows, so the response is empty (or 404). TC-09 tests this explicitly.</p>
+
+<hr>
+
+<h2>PART 6 — CAP IMPLEMENTATION PATTERNS</h2>
+
+<hr>
+
+<h3>6.1 CAP has before, on, and after handlers. What would you use each one for?</h3>
+
+<div class="table-wrapper"><table><tr><th>Phase</th><th>What it does</th><th>Examples in this app</th></tr><tr><td><strong><code>before</code></strong></td><td>Runs <strong>before</strong> the default/custom operation. Used for <strong>validation</strong> and <strong>input manipulation</strong>. If it calls <code>req.reject()</code>, the operation never happens.</td><td>Strip system fields from PATCH (<code>stripSystemFields</code>), set host and status on NEW draft, prevent deletion of master data, enforce DRAFT-only editing</td></tr><tr><td><strong><code>on</code></strong></td><td><strong>Replaces</strong> the default operation. Used for <strong>custom actions</strong> and <strong>complex business logic</strong>.</td><td>All seven actions: <code>submit</code>, <code>approve</code>, <code>rejectPass</code>, <code>cancel</code>, <code>checkIn</code>, <code>checkOut</code>, <code>copy</code>, plus <code>runDayEndJob</code> and <code>confirmReturn</code></td></tr><tr><td><strong><code>after</code></strong></td><td>Runs <strong>after</strong> the operation succeeded. Used for <strong>enrichment</strong> and <strong>post-processing</strong>. Cannot prevent the operation.</td><td>BR-14 masking of <code>idProofNumber</code>, computing <code>ageingDays</code> virtual field</td></tr></table></div>
+
+<hr>
+
+<h3>6.2 How do you define, implement, and call an action such as submit?</h3>
+
+<p><strong>Step 1 — Define in CDS</strong> (<span class="link-text">gatepass-service.cds:109</span>):</p>
+<pre class="code-block"><code class="lang-cds">entity VisitorPasses as projection on ... {
+  ...
+} actions {
+  action submit() returns VisitorPasses;
+};
+</code></pre>
+
+<p><strong>Step 2 — Implement in JS</strong> (<span class="link-text">gatepass-service.js:330</span>):</p>
+<pre class="code-block"><code class="lang-javascript">this.on('submit', VisitorPasses, async (req) =&gt; {
+  const pass = await loadPass(req);
+  assertTransition(pass.status_code, 'submit', req);
+  // ... validation and business logic ...
+  await UPDATE(DBPasses(), ID).set({ status_code: target, passNo });
+  await writeEvent(ID, 'DRAFT', target, 'SUBMIT', req);
+  return respond(ID, req);
+});
+</code></pre>
+
+<p><strong>Step 3 — Call from UI or API:</strong></p>
+<pre class="code-block"><code class="lang-text">POST /odata/v4/gate-pass/VisitorPasses(ID=&lt;uuid&gt;)/GatePassService.submit
+</code></pre>
+<p>Fiori Elements renders this as a button via <code>@UI.LineItem</code> or <code>@UI.Identification</code> annotations.</p>
+
+<hr>
+
+<h3>6.3 What does draft-enabling VisitorPasses give you, and what must be true of a draft?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>Draft-enabling means the host can start filling in a pass, close the browser, come back the next day, and continue where they left off. The half-finished pass is saved automatically but <strong>nobody else can see it</strong> — not other hosts, not the admin, not anyone. It only becomes visible when the host saves (activates) it.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p><code>@odata.draft.enabled</code> on the VisitorPasses projection:</p>
+<ol><li>Creates a shadow <code>_drafts</code> table in the database</li><li>Enables auto-save on every field change in Fiori Elements</li><li>Provides <code>NEW</code>, <code>EDIT</code>, <code>SAVE</code> (activation), <code>CANCEL</code> draft events</li><li>Drafts are isolated by <code>DraftAdministrativeData.InProcessByUser</code> — the M2 gate says: <em>"A draft is invisible to every other user including Admin — prove it in a second browser."</em></li></ol>
+<p>What must be true: a draft has no <code>passNo</code> (assigned at submit), no business rules applied yet, status is <code>DRAFT</code>, and it's private to the creator.</p>
+
+<hr>
+
+<h3>6.4 BR-07 and BR-08 cannot be written as simple field checks. How are they implemented?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>These rules require <strong>looking at other records</strong>, not just checking the current pass's own fields. BR-07 asks: "Is this same mobile number already on-site on another pass?" BR-08 asks: "Is this badge number already held by someone else who's on-site?" You can't answer either question by looking at the pass alone — you have to query the whole database.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+
+<p><strong>BR-07</strong> — Cross-pass duplicate check (<span class="link-text">gatepass-service.js:543-545</span>):</p>
+<pre class="code-block"><code class="lang-javascript">const onSite = await SELECT.one.from(DBPasses())
+  .where({ visitorMobile: pass.visitorMobile, status_code: 'ON_SITE', ID: { '!=': ID } });
+if (onSite) err('BR07_ON_SITE_ERROR', [onSite.plant_code, onSite.passNo]);
+</code></pre>
+
+<p><strong>BR-08</strong> — Cross-pass badge check (<span class="link-text">gatepass-service.js:549-551</span>):</p>
+<pre class="code-block"><code class="lang-javascript">const held = await SELECT.one.from(DBPasses())
+  .where({ badgeNo, status_code: 'ON_SITE', ID: { '!=': ID } });
+if (held) err('BR08_BADGE_IN_USE', [badgeNo, held.visitorName, held.passNo]);
+</code></pre>
+
+<p>Both use <code>SELECT.one</code> queries across all passes (not just the current one), filtering by <code>status_code = 'ON_SITE'</code> and excluding the current pass's ID.</p>
+
+<hr>
+
+<h3>6.5 Why must the status change and the PassEvent row be written in the same transaction, and how?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>Imagine you update the pass to "ON_SITE" but the event log entry fails. Now the pass says the visitor is inside, but there's no audit record of who admitted them or when. Or the reverse: the event says they were admitted but the pass still says "APPROVED." Either way, the data is inconsistent and untrustworthy. Both must succeed together or fail together.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>In CAP, every <code>on</code> handler for a bound action runs within the <strong>request's implicit transaction</strong>. Both <code>UPDATE(DBPasses())</code> and <code>INSERT.into(DBEvents())</code> use the same underlying database transaction. If anything throws after the UPDATE but before the INSERT completes, the entire transaction rolls back. No explicit <code>tx.begin()</code> / <code>tx.commit()</code> is needed — CAP does this automatically for each request.</p>
+
+<p>The spec says: <em>"Kill the process between the status update and the event insert: the status change rolled back too."</em></p>
+
+<hr>
+
+<h3>6.6 Where do the CSV sample files go, how are they named, and what must be true after cds deploy?</h3>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>CSV files (think: spreadsheets) containing test data go in the <code>db/data/</code> folder. Each file is named to match the database table it fills: <code>nub.gatepass-Plants.csv</code> fills the Plants table, <code>nub.gatepass-Employees.csv</code> fills the Employees table, etc. After running <code>cds deploy</code>, all the data from these CSVs must be loaded with no skipped rows.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>CAP convention: files in <code>db/data/</code> named <code><namespace>-<EntityName>.csv</code> are automatically loaded by <code>cds deploy</code>. The namespace is <code>nub.gatepass</code>, contexts add dot-separated segments:</p>
+<ul><li><code>nub.gatepass.master-Plants.csv</code></li><li><code>nub.gatepass.master-Employees.csv</code></li><li><code>nub.gatepass.master-VisitAreas.csv</code></li><li><code>nub.gatepass.config-VisitPurposes.csv</code></li><li><code>nub.gatepass.config-IdProofTypes.csv</code></li><li><code>nub.gatepass.config-PassStatus.csv</code></li><li><code>nub.gatepass.transaction-VisitorPasses.csv</code></li><li>etc.</li></ul>
+<p>After deploy: every CSV row exists in the database, foreign keys resolve, and the test scenarios from Section 12 are executable.</p>
+
+<hr>
+
+<h3>6.7 How do you test this application, and how is it deployed to BTP?</h3>
+
+<p><strong>Testing:</strong></p>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>Automated tests run with <code>npm test</code>. Each test logs in as a specific user (anitha, karthik, guard1, etc.) and simulates creating passes, submitting, checking in, etc. The tests prove every business rule works — not by clicking buttons, but by sending the same requests a browser would send.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>Tests use <code>@cap-js/cds-test</code> with Node's built-in test runner (<code>node --test test/*.test.js</code>). Each test case corresponds to a TC-id from Section 13. The test authenticates as a specific user, sends OData requests, and asserts the response status codes and data. Key tests:</p>
+<ul><li>TC-08: raw PATCH to system fields → refused</li><li>TC-09: cross-user access → 403 or empty</li><li>TC-10: update/delete PassEvent → refused</li></ul>
+<p><strong>Deployment:</strong></p>
+
+<p><strong><span class="badge badge-layman">🟢 LAYMAN</span> Layman:</strong></p>
+<p>The application is packaged into an "MTA" (Multi-Target Application) archive and deployed to SAP BTP. On BTP, it uses HANA Cloud for the database and XSUAA for real user authentication instead of the mocked users used locally.</p>
+
+<p><strong><span class="badge badge-technical">🔵 TECHNICAL</span> Technical:</strong></p>
+<p>The <span class="link-text"><code>mta.yaml</code></span> defines modules (srv, db deployer, UI apps) and resources (HANA HDI container, XSUAA service instance, destinations). Build: <code>mbt build</code> → produces <code>.mtar</code> in <code>mta_archives/</code>. Deploy: <code>cf deploy <archive>.mtar</code>. The <code>[production]</code> profile in <code>package.json</code> switches auth from <code>mocked</code> to <code>xsuaa</code>. The <span class="link-text"><code>xs-security.json</code></span> defines the role templates (<code>Host</code>, <code>SecurityGuard</code>, <code>SecuritySupervisor</code>, <code>Admin</code>) and role collections.</p>
+
+<hr>
+
+<h2>SUMMARY TABLE: Key Design Decisions at a Glance</h2>
+
+<div class="table-wrapper"><table><tr><th>Decision</th><th>Why</th></tr><tr><td>BTP side-app, not standard SAP</td><td>No SAP transaction covers visitor gate management</td></tr><tr><td><code>requiresApproval</code> is configuration, not code</td><td>EHS changes shouldn't require a developer</td></tr><tr><td>passNo at submit, not at draft</td><td>Drafts are tentative; numbers are official</td></tr><tr><td>PassEvents as a separate immutable table</td><td>Full audit trail, not just "last modified by"</td></tr><tr><td>One transition table, not scattered checks</td><td>Single source of truth, one place to audit</td></tr><tr><td>ON_SITE → CANCELLED forbidden</td><td>A person inside a factory can't be "cancelled"</td></tr><tr><td>Day-end flags overstay, never auto-closes</td><td>The system must never invent a departure time (P3)</td></tr><tr><td>Rules on the server, not the UI</td><td><code>curl</code> and direct URLs bypass UI controls</td></tr><tr><td>Master data soft-deleted with <code>isActive</code></td><td>Old passes must still resolve their references</td></tr><tr><td>ID proof masked on the server</td><td>BR-14 cannot be defeated by reading raw OData</td></tr></table></div>
+
+
+<div style="margin-top:40px; padding:20px; background:var(--code-bg); border-radius:8px; text-align:center; font-size:9pt; color:var(--text-secondary);">
+  <strong>GatePass — Comprehensive Q&A Document</strong><br>
+  Generated from the GatePass project specification and codebase.<br>
+  NubTech Industries Pvt. Ltd. — Plant Security & EHS · SAP BTP CAP Application
+</div>
+
+</body>
+</html>
